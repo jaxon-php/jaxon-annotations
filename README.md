@@ -93,12 +93,12 @@ It applies to methods and classes.
 ```php
 class JaxonExample
 {
-    public function funcBefore1()
+    protected function funcBefore1()
     {
         // Do something
     }
 
-    public function funcBefore2($param1, $param2)
+    protected function funcBefore2($param1, $param2)
     {
         // Do something with parameters
     }
@@ -122,12 +122,12 @@ It applies to methods and classes.
 ```php
 class JaxonExample
 {
-    public function funcAfter1()
+    protected function funcAfter1()
     {
         // Do something
     }
 
-    public function funcAfter2($param1)
+    protected function funcAfter2($param1)
     {
         // Do something with parameters
     }
