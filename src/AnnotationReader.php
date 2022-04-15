@@ -58,11 +58,18 @@ class AnnotationReader
     /**
      * Register the annotation reader into the Jaxon DI container
      *
+     * @param bool $bForce Force registration
+     *
      * @return void
      */
-    public static function register()
+    public static function register(bool $bForce = false)
     {
         $di = jaxon()->di();
+        if(!$bForce && $di->h(AnnotationReader::class))
+        {
+            return;
+        }
+
         $di->val('jaxon_annotations_cache_dir', sys_get_temp_dir());
         $di->set(AnnotationReader::class, function($c) {
             $xAnnotationManager = new AnnotationManager();
