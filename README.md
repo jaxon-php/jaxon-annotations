@@ -133,8 +133,8 @@ class JaxonExample
     }
 
     /**
-     * @before('call' => 'funcAfter1')
-     * @before('call' => 'funcAfter2', 'with' => ['param'])
+     * @after('call' => 'funcAfter1')
+     * @after('call' => 'funcAfter2', 'with' => ['param'])
      */
     public function action()
     {
