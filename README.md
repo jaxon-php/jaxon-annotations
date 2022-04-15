@@ -127,9 +127,9 @@ class JaxonExample
         // Do something
     }
 
-    protected function funcAfter2($param1)
+    protected function funcAfter2($param)
     {
-        // Do something with parameters
+        // Do something with parameter
     }
 
     /**
@@ -157,8 +157,8 @@ class JaxonExample extends \Jaxon\App\CallableClass
     public function action()
     {
         // Update a value in the data bag.
-        $count = $this->bags('user')->get('count', 0);
-        $this->bags('user')->set('count', $count++);
+        $count = $this->bag('user')->get('count', 0);
+        $this->bag('user')->set('count', $count++);
     }
 }
 ```
