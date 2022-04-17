@@ -8,10 +8,10 @@
 [![Latest Unstable Version](https://poser.pugx.org/jaxon-php/jaxon-annotations/v/unstable)](https://packagist.org/packages/jaxon-php/jaxon-annotations)
 [![License](https://poser.pugx.org/jaxon-php/jaxon-annotations/license)](https://packagist.org/packages/jaxon-php/jaxon-annotations)
 
-Annotations support for the Jaxon library
-=========================================
+Annotations for the Jaxon library
+=================================
 
-This package provides annotations support for the Jaxon core library.
+This package provides annotation support for the Jaxon library.
 
 Installation
 ------------
