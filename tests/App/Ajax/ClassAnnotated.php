@@ -13,6 +13,8 @@ use Jaxon\Annotations\Tests\App\CallableClass;
  * @after('call' => 'funcAfter1')
  * @after('call' => 'funcAfter2')
  * @after('call' => 'funcAfter3')
+ * @di('attr' => 'colorService', 'class' => 'Jaxon\Annotations\Tests\Service\ColorService')
+ * @di('attr' => 'textService', 'class' => 'Jaxon\Annotations\Tests\Service\TextService')
  */
 class ClassAnnotated extends CallableClass
 {

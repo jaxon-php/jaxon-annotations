@@ -94,6 +94,21 @@ class Annotated extends CallableClass
     }
 
     /**
+     * @di('attr' => 'colorService', 'class' => 'Jaxon\Annotations\Tests\Service\ColorService')
+     */
+    public function di1()
+    {
+    }
+
+    /**
+     * @di('attr' => 'colorService', 'class' => 'Jaxon\Annotations\Tests\Service\ColorService')
+     * @di('attr' => 'textService', 'class' => 'Jaxon\Annotations\Tests\Service\TextService')
+     */
+    public function di2()
+    {
+    }
+
+    /**
      * @before('name' => 'funcBefore', 'with' => ['param1'])
      */
     public function cbBeforeNoCall()
@@ -132,6 +147,20 @@ class Annotated extends CallableClass
      * @after('call' => 'funcAfter', 'with' => true)
      */
     public function cbAfterWrongAttrType()
+    {
+    }
+
+    /**
+     * @di('attr' => 'attr', 'params' => '')
+     */
+    public function diUnknownAttr()
+    {
+    }
+
+    /**
+     * @di('attr' => 'attr', 'class' => true)
+     */
+    public function diWrongAttrType()
     {
     }
 }

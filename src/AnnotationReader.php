@@ -19,6 +19,7 @@ use Jaxon\Annotations\Annotation\BeforeAnnotation;
 use Jaxon\Annotations\Annotation\DataBagAnnotation;
 use Jaxon\Annotations\Annotation\ExcludeAnnotation;
 use Jaxon\Annotations\Annotation\UploadAnnotation;
+use Jaxon\Annotations\Annotation\ContainerAnnotation;
 use Jaxon\Exception\SetupException;
 use Jaxon\Plugin\AnnotationReaderInterface;
 use mindplay\annotations\AnnotationCache;
@@ -47,8 +48,9 @@ class AnnotationReader
         $this->xManager->registry['upload'] = UploadAnnotation::class;
         $this->xManager->registry['databag'] = DataBagAnnotation::class;
         $this->xManager->registry['exclude'] = ExcludeAnnotation::class;
-        $this->xManager->registry['before'] = BeforeAnnotation::class;;
-        $this->xManager->registry['after'] = AfterAnnotation::class;;
+        $this->xManager->registry['before'] = BeforeAnnotation::class;
+        $this->xManager->registry['after'] = AfterAnnotation::class;
+        $this->xManager->registry['di'] = ContainerAnnotation::class;
         // Missing standard annotations.
         // We need to define this, otherwise they throw an exception, and make the whole processing fail.
         $this->xManager->registry['const'] = false;
