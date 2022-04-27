@@ -3,9 +3,10 @@
 /**
  * AnnotationReader.php
  *
- * Jaxon annotation manager.
+ * Jaxon annotation reader.
  *
  * @package jaxon-annotations
+ * @author Thierry Feuzeu <thierry.feuzeu@gmail.com>
  * @copyright 2022 Thierry Feuzeu <thierry.feuzeu@gmail.com>
  * @license https://opensource.org/licenses/BSD-3-Clause BSD 3-Clause License
  * @link https://github.com/jaxon-php/jaxon-annotations
@@ -20,6 +21,7 @@ use Jaxon\Annotations\Annotation\DataBagAnnotation;
 use Jaxon\Annotations\Annotation\ExcludeAnnotation;
 use Jaxon\Annotations\Annotation\UploadAnnotation;
 use Jaxon\Annotations\Annotation\ContainerAnnotation;
+use Jaxon\Di\Container;
 use Jaxon\Exception\SetupException;
 use Jaxon\Plugin\AnnotationReaderInterface;
 use mindplay\annotations\AnnotationCache;
@@ -29,7 +31,6 @@ use mindplay\annotations\AnnotationManager;
 use function array_filter;
 use function count;
 use function is_a;
-use function jaxon;
 
 class AnnotationReader
 {
@@ -62,12 +63,12 @@ class AnnotationReader
      * Register the annotation reader into the Jaxon DI container
      *
      * @param bool $bForce Force registration
+     * @param Container $di
      *
      * @return void
      */
-    public static function register(bool $bForce = false)
+    public static function register(Container $di, bool $bForce = false)
     {
-        $di = jaxon()->di();
         if(!$bForce && $di->h(AnnotationReader::class))
         {
             return;
