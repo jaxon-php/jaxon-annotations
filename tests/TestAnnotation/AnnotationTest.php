@@ -47,6 +47,8 @@ class AnnotationTest extends TestCase
      */
     public function testUploadAndExcludeAnnotation()
     {
+        // Can be called multiple times without error.
+        AnnotationReader::register();
         [$bExcluded, $aProperties, $aProtected] = $this->xAnnotationReader->getAttributes(Annotated::class, ['saveFiles', 'doNot']);
 
         $this->assertFalse($bExcluded);
@@ -124,15 +126,36 @@ class AnnotationTest extends TestCase
     /**
      * @throws SetupException
      */
+    public function testContainerAnnotation()
+    {
+        [$bExcluded, $aProperties, ] = $this->xAnnotationReader->getAttributes(Annotated::class, ['di1', 'di2']);
+
+        $this->assertFalse($bExcluded);
+
+        $this->assertCount(2, $aProperties);
+        $this->assertArrayHasKey('di1', $aProperties);
+        $this->assertArrayHasKey('di2', $aProperties);
+        $this->assertCount(2, $aProperties['di1']['__di']);
+        $this->assertCount(2, $aProperties['di2']['__di']);
+        $this->assertEquals('Jaxon\Annotations\Tests\Service\ColorService', $aProperties['di1']['__di']['colorService']);
+        $this->assertEquals('Jaxon\Annotations\Tests\App\Ajax\FontService', $aProperties['di1']['__di']['fontService']);
+        $this->assertEquals('Jaxon\Annotations\Tests\Service\ColorService', $aProperties['di2']['__di']['colorService']);
+        $this->assertEquals('Jaxon\Annotations\Tests\Service\TextService', $aProperties['di2']['__di']['textService']);
+    }
+
+    /**
+     * @throws SetupException
+     */
     public function testClassAnnotation()
     {
-        [$bExcluded, $aProperties, $aProtected] = $this->xAnnotationReader->getAttributes(ClassAnnotated::class, []);
+        [$bExcluded, $aProperties,] = $this->xAnnotationReader->getAttributes(ClassAnnotated::class, []);
+        // $this->assertEquals('', json_encode($aProperties));
 
         $this->assertFalse($bExcluded);
 
         $this->assertCount(1, $aProperties);
         $this->assertArrayHasKey('*', $aProperties);
-        $this->assertCount(3, $aProperties['*']);
+        $this->assertCount(4, $aProperties['*']);
         $this->assertArrayHasKey('bags', $aProperties['*']);
         $this->assertArrayHasKey('__before', $aProperties['*']);
         $this->assertArrayHasKey('__after', $aProperties['*']);
@@ -154,6 +177,14 @@ class AnnotationTest extends TestCase
         $this->assertIsArray($aProperties['*']['__after']['funcAfter1']);
         $this->assertIsArray($aProperties['*']['__after']['funcAfter2']);
         $this->assertIsArray($aProperties['*']['__after']['funcAfter3']);
+
+        $this->assertCount(3, $aProperties['*']['__di']);
+        $this->assertArrayHasKey('colorService', $aProperties['*']['__di']);
+        $this->assertArrayHasKey('textService', $aProperties['*']['__di']);
+        $this->assertArrayHasKey('fontService', $aProperties['*']['__di']);
+        $this->assertEquals('Jaxon\Annotations\Tests\Service\ColorService', $aProperties['*']['__di']['colorService']);
+        $this->assertEquals('Jaxon\Annotations\Tests\Service\TextService', $aProperties['*']['__di']['textService']);
+        $this->assertEquals('Jaxon\Annotations\Tests\App\Ajax\FontService', $aProperties['*']['__di']['fontService']);
     }
 
     /**
@@ -227,5 +258,17 @@ class AnnotationTest extends TestCase
     {
         $this->expectException(SetupException::class);
         $this->xAnnotationReader->getAttributes(Annotated::class, ['cbAfterWrongAttrType']);
+    }
+
+    public function testContainerAnnotationUnknownAttr()
+    {
+        $this->expectException(SetupException::class);
+        $this->xAnnotationReader->getAttributes(Annotated::class, ['diUnknownAttr']);
+    }
+
+    public function testContainerAnnotationWrongAttrType()
+    {
+        $this->expectException(SetupException::class);
+        $this->xAnnotationReader->getAttributes(Annotated::class, ['diWrongAttrType']);
     }
 }

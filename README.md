@@ -8,10 +8,10 @@
 [![Latest Unstable Version](https://poser.pugx.org/jaxon-php/jaxon-annotations/v/unstable)](https://packagist.org/packages/jaxon-php/jaxon-annotations)
 [![License](https://poser.pugx.org/jaxon-php/jaxon-annotations/license)](https://packagist.org/packages/jaxon-php/jaxon-annotations)
 
-Annotations support for the Jaxon library
-=========================================
+Annotations for the Jaxon library
+=================================
 
-This package provides annotations support for the Jaxon core library.
+This package provides annotation support for the Jaxon library.
 
 Installation
 ------------
@@ -159,6 +159,64 @@ class JaxonExample extends \Jaxon\App\CallableClass
         // Update a value in the data bag.
         $count = $this->bag('user')->get('count', 0);
         $this->bag('user')->set('count', $count++);
+    }
+}
+```
+
+### @di
+
+It defines an attribute that will be injected in a class.
+It takes the name and the class of the attribute as mandatory parameters.
+It applies to methods and classes.
+
+```php
+class JaxonExample extends \Jaxon\App\CallableClass
+{
+    /**
+     * @var \App\Services\Translator
+     */
+     protected $translator;
+
+    /**
+     * @di('attr' => 'translator', class => '\App\Services\Translator')
+     */
+    public function translate(string $phrase)
+    {
+        // The $translator property is set from the DI container when this method is called.
+        $phrase = $this->translator->translate($phrase);
+    }
+}
+```
+
+If the class name does not start with a `\`, then the corresponding fully qualified name (FQN) will be set using
+either the `use` instructions or the `namespace` in its source file.
+
+```php
+namespace App\Ajax;
+
+use App\Services\Translator;
+
+class JaxonExample extends \Jaxon\App\CallableClass
+{
+    /**
+     * @var Translator
+     */
+     protected $translator;
+
+    /**
+     * @var Formatter
+     */
+     protected $formatter;
+
+    /**
+     * @di('attr' => 'translator', class => 'Translator')
+     * @di('attr' => 'formatter', class => 'Formatter')
+     */
+    public function translate(string $phrase)
+    {
+        // The Translator FQN is defined by the use instruction => App\Services\Translator.
+        // The Formatter FQN is defined by the current namespace => App\Ajax\Formatter.
+        $phrase = $this->formatter->format($this->translator->translate($phrase));
     }
 }
 ```

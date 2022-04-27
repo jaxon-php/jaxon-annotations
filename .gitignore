@@ -1,8 +1,8 @@
 .project
 .settings/*
+.idea/
 vendor/
 composer.lock
-.idea
-/build/
+build/
 .phpunit.result.cache
 tests/tmp
