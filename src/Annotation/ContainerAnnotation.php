@@ -14,17 +14,20 @@
 namespace Jaxon\Annotations\Annotation;
 
 use mindplay\annotations\AnnotationException;
+use mindplay\annotations\AnnotationFile;
+use mindplay\annotations\IAnnotationFileAware;
 
 use function count;
 use function is_array;
 use function is_string;
+use function ltrim;
 
 /**
  * Specifies attributes to inject into a callable object.
  *
  * @usage('class' => true, 'method'=>true, 'multiple'=>true, 'inherited'=>true)
  */
-class ContainerAnnotation extends AbstractAnnotation
+class ContainerAnnotation extends AbstractAnnotation implements IAnnotationFileAware
 {
     /**
      * The attribute name
@@ -41,6 +44,19 @@ class ContainerAnnotation extends AbstractAnnotation
     protected $sClass = '';
 
     /**
+     * @var AnnotationFile
+     */
+    protected $xClassFile;
+
+    /**
+     * @inheritDoc
+     */
+    public function setAnnotationFile(AnnotationFile $file)
+    {
+        $this->xClassFile = $file;
+    }
+
+    /**
      * @inheritDoc
      * @throws AnnotationException
      */
@@ -54,7 +70,7 @@ class ContainerAnnotation extends AbstractAnnotation
                 'and a property "class" of type string');
         }
         $this->sAttr = $properties['attr'];
-        $this->sClass = $properties['class'];
+        $this->sClass = ltrim($this->xClassFile->resolveType($properties['class']), '\\');
     }
 
     /**

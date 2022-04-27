@@ -3,6 +3,7 @@
 namespace Jaxon\Annotations\Tests\App\Ajax;
 
 use Jaxon\Annotations\Tests\App\CallableClass;
+use Jaxon\Annotations\Tests\Service\ColorService;
 
 class Annotated extends CallableClass
 {
@@ -94,15 +95,16 @@ class Annotated extends CallableClass
     }
 
     /**
-     * @di('attr' => 'colorService', 'class' => 'Jaxon\Annotations\Tests\Service\ColorService')
+     * @di('attr' => 'colorService', 'class' => 'ColorService')
+     * @di('attr' => 'fontService', 'class' => 'FontService')
      */
     public function di1()
     {
     }
 
     /**
-     * @di('attr' => 'colorService', 'class' => 'Jaxon\Annotations\Tests\Service\ColorService')
-     * @di('attr' => 'textService', 'class' => 'Jaxon\Annotations\Tests\Service\TextService')
+     * @di('attr' => 'colorService', 'class' => 'ColorService')
+     * @di('attr' => 'textService', 'class' => '\Jaxon\Annotations\Tests\Service\TextService')
      */
     public function di2()
     {

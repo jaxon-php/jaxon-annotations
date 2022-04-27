@@ -135,9 +135,10 @@ class AnnotationTest extends TestCase
         $this->assertCount(2, $aProperties);
         $this->assertArrayHasKey('di1', $aProperties);
         $this->assertArrayHasKey('di2', $aProperties);
-        $this->assertCount(1, $aProperties['di1']['__di']);
+        $this->assertCount(2, $aProperties['di1']['__di']);
         $this->assertCount(2, $aProperties['di2']['__di']);
         $this->assertEquals('Jaxon\Annotations\Tests\Service\ColorService', $aProperties['di1']['__di']['colorService']);
+        $this->assertEquals('Jaxon\Annotations\Tests\App\Ajax\FontService', $aProperties['di1']['__di']['fontService']);
         $this->assertEquals('Jaxon\Annotations\Tests\Service\ColorService', $aProperties['di2']['__di']['colorService']);
         $this->assertEquals('Jaxon\Annotations\Tests\Service\TextService', $aProperties['di2']['__di']['textService']);
     }
@@ -148,6 +149,7 @@ class AnnotationTest extends TestCase
     public function testClassAnnotation()
     {
         [$bExcluded, $aProperties,] = $this->xAnnotationReader->getAttributes(ClassAnnotated::class, []);
+        // $this->assertEquals('', json_encode($aProperties));
 
         $this->assertFalse($bExcluded);
 
@@ -176,11 +178,13 @@ class AnnotationTest extends TestCase
         $this->assertIsArray($aProperties['*']['__after']['funcAfter2']);
         $this->assertIsArray($aProperties['*']['__after']['funcAfter3']);
 
-        $this->assertCount(2, $aProperties['*']['__di']);
+        $this->assertCount(3, $aProperties['*']['__di']);
         $this->assertArrayHasKey('colorService', $aProperties['*']['__di']);
         $this->assertArrayHasKey('textService', $aProperties['*']['__di']);
+        $this->assertArrayHasKey('fontService', $aProperties['*']['__di']);
         $this->assertEquals('Jaxon\Annotations\Tests\Service\ColorService', $aProperties['*']['__di']['colorService']);
         $this->assertEquals('Jaxon\Annotations\Tests\Service\TextService', $aProperties['*']['__di']['textService']);
+        $this->assertEquals('Jaxon\Annotations\Tests\App\Ajax\FontService', $aProperties['*']['__di']['fontService']);
     }
 
     /**
