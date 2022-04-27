@@ -1,11 +1,12 @@
 <?php
 
 /**
- * AfterAnnotation.php
+ * ExcludeAnnotation.php
  *
- * Jaxon annotation for callbacks.
+ * Jaxon annotation for exclude classes or methods from js export.
  *
  * @package jaxon-annotations
+ * @author Thierry Feuzeu <thierry.feuzeu@gmail.com>
  * @copyright 2022 Thierry Feuzeu <thierry.feuzeu@gmail.com>
  * @license https://opensource.org/licenses/BSD-3-Clause BSD 3-Clause License
  * @link https://github.com/jaxon-php/jaxon-annotations
@@ -19,7 +20,7 @@ use function count;
 use function is_bool;
 
 /**
- * Specifies a method to be called after the one targeted by a Jaxon request.
+ * Specifies if a class or method is excluded from js export.
  *
  * @usage('class' => true, 'method'=>true)
  */

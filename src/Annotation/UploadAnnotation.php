@@ -6,6 +6,7 @@
  * Jaxon annotation for file upload.
  *
  * @package jaxon-annotations
+ * @author Thierry Feuzeu <thierry.feuzeu@gmail.com>
  * @copyright 2022 Thierry Feuzeu <thierry.feuzeu@gmail.com>
  * @license https://opensource.org/licenses/BSD-3-Clause BSD 3-Clause License
  * @link https://github.com/jaxon-php/jaxon-annotations
@@ -13,7 +14,6 @@
 
 namespace Jaxon\Annotations\Annotation;
 
-use mindplay\annotations\Annotation;
 use mindplay\annotations\AnnotationException;
 
 use function count;
