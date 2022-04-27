@@ -29,6 +29,7 @@ use mindplay\annotations\AnnotationManager;
 use function array_filter;
 use function count;
 use function is_a;
+use function jaxon;
 
 class AnnotationReader
 {
