@@ -23,12 +23,10 @@ It requires `jaxon-php/jaxon-core` v4 or higher.
 composer require jaxon-php/jaxon-annotations
 ```
 
-Register the annotation reader with Jaxon.
+Set the annotation config option to on.
 
 ```php
-use Jaxon\Annotations\AnnotationReader;
-
-AnnotationReader::register();
+jaxon()->setOption('core.annotations.on', true);
 ```
 
 Usage
