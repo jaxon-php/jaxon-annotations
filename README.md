@@ -12,6 +12,10 @@ Annotations for the Jaxon library
 =================================
 
 This package provides annotation support for the Jaxon library.
+The configuration options that are related to Jaxon classes can be set directly in the class files using annotations.
+
+Two different syntax are allowed for annotations: the default array-like syntax, and an alternative docblock-like syntax,
+available since version `1.4`.
 
 Installation
 ------------
@@ -62,6 +66,29 @@ class JaxonExample
 }
 ```
 
+The docblock like syntax can also be used.
+
+```php
+class JaxonExample
+{
+    /**
+     * @exclude false
+     */
+    public function do()
+    {
+        // This method will not be exported to javascript.
+    }
+
+    /**
+     * @exclude true
+     */
+    public function doNot()
+    {
+        // This method will not be exported to javascript.
+    }
+}
+```
+
 ### @upload
 
 It adds file upload to an ajax request.
@@ -73,6 +100,22 @@ class JaxonExample extends \Jaxon\App\CallableClass
 {
     /**
      * @upload('field' => 'div-user-file')
+     */
+    public function saveFile()
+    {
+        // Get the uploaded files.
+        $files = $this->upload()->files();
+    }
+}
+```
+
+The docblock like syntax can also be used.
+
+```php
+class JaxonExample extends \Jaxon\App\CallableClass
+{
+    /**
+     * @upload div-user-file
      */
     public function saveFile()
     {
@@ -111,6 +154,31 @@ class JaxonExample
 }
 ```
 
+The docblock like syntax can also be used.
+
+```php
+class JaxonExample
+{
+    protected function funcBefore1()
+    {
+        // Do something
+    }
+
+    protected function funcBefore2($param1, $param2)
+    {
+        // Do something with parameters
+    }
+
+    /**
+     * @before funcBefore1
+     * @before funcBefore2 ["param1", "param2"]
+     */
+    public function action()
+    {
+    }
+}
+```
+
 ### @after
 
 It defines a method of the class as a callback to be called after processing the request.
@@ -140,6 +208,31 @@ class JaxonExample
 }
 ```
 
+The docblock like syntax can also be used.
+
+```php
+class JaxonExample
+{
+    protected function funcAfter1()
+    {
+        // Do something
+    }
+
+    protected function funcAfter2($param)
+    {
+        // Do something with parameter
+    }
+
+    /**
+     * @after funcAfter1
+     * @after funcAfter2 ["param"]
+     */
+    public function action()
+    {
+    }
+}
+```
+
 ### @databag
 
 It defines a data bag to be appended to ajax requests to a method.
@@ -151,6 +244,23 @@ class JaxonExample extends \Jaxon\App\CallableClass
 {
     /**
      * @databag('name' => 'user')
+     */
+    public function action()
+    {
+        // Update a value in the data bag.
+        $count = $this->bag('user')->get('count', 0);
+        $this->bag('user')->set('count', $count++);
+    }
+}
+```
+
+The docblock like syntax can also be used.
+
+```php
+class JaxonExample extends \Jaxon\App\CallableClass
+{
+    /**
+     * @databag user
      */
     public function action()
     {
@@ -186,7 +296,7 @@ class JaxonExample extends \Jaxon\App\CallableClass
 }
 ```
 
-If the class name does not start with a `\`, then the corresponding fully qualified name (FQN) will be set using
+If the class name does not start with a `"\"`, then the corresponding fully qualified name (FQN) will be set using
 either the `use` instructions or the `namespace` in its source file.
 
 ```php
@@ -209,6 +319,38 @@ class JaxonExample extends \Jaxon\App\CallableClass
     /**
      * @di('attr' => 'translator', class => 'Translator')
      * @di('attr' => 'formatter', class => 'Formatter')
+     */
+    public function translate(string $phrase)
+    {
+        // The Translator FQN is defined by the use instruction => App\Services\Translator.
+        // The Formatter FQN is defined by the current namespace => App\Ajax\Formatter.
+        $phrase = $this->formatter->format($this->translator->translate($phrase));
+    }
+}
+```
+
+The docblock like syntax can also be used.
+
+```php
+namespace App\Ajax;
+
+use App\Services\Translator;
+
+class JaxonExample extends \Jaxon\App\CallableClass
+{
+    /**
+     * @var Translator
+     */
+     protected $translator;
+
+    /**
+     * @var Formatter
+     */
+     protected $formatter;
+
+    /**
+     * @di translator   Translator
+     * @di formatter    Formatter
      */
     public function translate(string $phrase)
     {
