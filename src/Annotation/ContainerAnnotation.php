@@ -22,6 +22,7 @@ use function count;
 use function is_array;
 use function is_string;
 use function ltrim;
+use function preg_match;
 use function preg_split;
 use function rtrim;
 
@@ -78,6 +79,26 @@ class ContainerAnnotation extends AbstractAnnotation implements IAnnotationFileA
     }
 
     /**
+     * @param string $sClassName
+     *
+     * @return bool
+     */
+    protected function validateClassName(string $sClassName): bool
+    {
+        return preg_match('/^(\\\)?([a-zA-Z][a-zA-Z0-9_]*)(\\\[a-zA-Z][a-zA-Z0-9_]*)*$/', $sClassName) > 0;
+    }
+
+    /**
+     * @param string $sAttrName
+     *
+     * @return bool
+     */
+    protected function validateAttrName(string $sAttrName): bool
+    {
+        return preg_match('/^[a-zA-Z][a-zA-Z0-9_]*$/', $sAttrName) > 0;
+    }
+
+    /**
      * @inheritDoc
      * @throws AnnotationException
      */
@@ -89,6 +110,14 @@ class ContainerAnnotation extends AbstractAnnotation implements IAnnotationFileA
         {
             throw new AnnotationException('The @di annotation requires a property "attr" of type string ' .
                 'and a property "class" of type string');
+        }
+        if(!$this->validateAttrName($properties['attr']))
+        {
+            throw new AnnotationException($properties['attr'] . ' is not a valid "attr" value for the @di annotation');
+        }
+        if(!$this->validateClassName($properties['class']))
+        {
+            throw new AnnotationException($properties['class'] . ' is not a valid "class" value for the @di annotation');
         }
         $this->sAttr = $properties['attr'];
         $this->sClass = ltrim($this->xClassFile->resolveType($properties['class']), '\\');

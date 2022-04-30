@@ -19,6 +19,7 @@ use mindplay\annotations\AnnotationException;
 use function count;
 use function is_array;
 use function is_string;
+use function preg_match;
 use function preg_split;
 
 /**
@@ -45,6 +46,16 @@ class DataBagAnnotation extends AbstractAnnotation
     }
 
     /**
+     * @param string $sDataBagName
+     *
+     * @return bool
+     */
+    protected function validateDataBagName(string $sDataBagName): bool
+    {
+        return preg_match('/^[a-zA-Z][a-zA-Z0-9_\-\.]*$/', $sDataBagName) > 0;
+    }
+
+    /**
      * @inheritDoc
      * @throws AnnotationException
      */
@@ -53,6 +64,10 @@ class DataBagAnnotation extends AbstractAnnotation
         if(count($properties) !== 1 || !isset($properties['name']) || !is_string($properties['name']))
         {
             throw new AnnotationException('The @databag annotation requires a property "name" of type string');
+        }
+        if(!$this->validateDataBagName($properties['name']))
+        {
+            throw new AnnotationException($properties['name'] . ' is not a valid "name" value for the @databag annotation');
         }
         $this->sName = $properties['name'];
     }

@@ -22,6 +22,7 @@ use function count;
 use function is_array;
 use function is_string;
 use function json_decode;
+use function preg_match;
 use function preg_split;
 use function rtrim;
 
@@ -65,6 +66,16 @@ abstract class CallbackAnnotation extends AbstractAnnotation
     }
 
     /**
+     * @param string $sMethodName
+     *
+     * @return bool
+     */
+    protected function validateMethodName(string $sMethodName): bool
+    {
+        return preg_match('/^[a-zA-Z][a-zA-Z0-9_]*$/', $sMethodName) > 0;
+    }
+
+    /**
      * @inheritDoc
      * @throws AnnotationException
      */
@@ -74,6 +85,11 @@ abstract class CallbackAnnotation extends AbstractAnnotation
         {
             throw new AnnotationException('The @' . $this->getType() .
                 ' annotation requires a property "call" of type string');
+        }
+        if(!$this->validateMethodName($properties['call']))
+        {
+            throw new AnnotationException($properties['call'] .
+                ' is not a valid "call" value for the @' . $this->getType() . ' annotation');
         }
         foreach(array_keys($properties) as $propName)
         {
