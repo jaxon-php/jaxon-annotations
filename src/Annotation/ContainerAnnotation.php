@@ -22,6 +22,8 @@ use function count;
 use function is_array;
 use function is_string;
 use function ltrim;
+use function preg_split;
+use function rtrim;
 
 /**
  * Specifies attributes to inject into a callable object.
@@ -55,6 +57,24 @@ class ContainerAnnotation extends AbstractAnnotation implements IAnnotationFileA
     public function setAnnotationFile(AnnotationFile $file)
     {
         $this->xClassFile = $file;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public static function parseAnnotation($value)
+    {
+        $aParams = preg_split("/[\s]+/", $value, 3);
+        $nParamCount = count($aParams);
+        if($nParamCount === 1)
+        {
+            return ['attr' => rtrim($aParams[0])];
+        }
+        if($nParamCount === 2)
+        {
+            return ['attr' => rtrim($aParams[0]), 'class' => $aParams[1]];
+        }
+        return ['attr' => rtrim($aParams[0]), 'class' => $aParams[1], 'extra' => $aParams[2]];
     }
 
     /**

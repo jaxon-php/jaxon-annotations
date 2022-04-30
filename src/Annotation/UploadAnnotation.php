@@ -18,6 +18,7 @@ use mindplay\annotations\AnnotationException;
 
 use function count;
 use function is_string;
+use function preg_split;
 
 /**
  * Specifies an upload form field id.
@@ -32,6 +33,15 @@ class UploadAnnotation extends AbstractAnnotation
      * @var string
      */
     protected $sField = '';
+
+    /**
+     * @inheritDoc
+     */
+    public static function parseAnnotation($value)
+    {
+        $aParams = preg_split("/[\s]+/", $value, 2);
+        return count($aParams) === 1 ? ['field' => $aParams[0]] : ['field' => $aParams[0], 'extra' => $aParams[1]];
+    }
 
     /**
      * @inheritDoc

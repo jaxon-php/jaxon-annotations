@@ -14,77 +14,18 @@
 
 namespace Jaxon\Annotations\Annotation;
 
-use mindplay\annotations\AnnotationException;
-
-use function array_keys;
-use function is_array;
-use function is_string;
-
 /**
  * Specifies a method to be called before the one targeted by a Jaxon request.
  *
  * @usage('class' => true, 'method'=>true, 'multiple'=>true, 'inherited'=>true)
  */
-class BeforeAnnotation extends AbstractAnnotation
+class BeforeAnnotation extends CallbackAnnotation
 {
     /**
-     * @var string
-     */
-    protected $sMethodName = '';
-
-    /**
-     * @var array
-     */
-    protected $sMethodParams = [];
-
-    /**
-     * @inheritDoc
-     * @throws AnnotationException
-     */
-    public function initAnnotation(array $properties)
-    {
-        if(!isset($properties['call']) || !is_string($properties['call']))
-        {
-            throw new AnnotationException('The @before annotation requires a property "call" of type string');
-        }
-        foreach(array_keys($properties) as $propName)
-        {
-            if($propName !== 'call' && $propName !== 'with')
-            {
-                throw new AnnotationException('Unknown property "' . $propName . '" in the @before annotation');
-            }
-        }
-        if(isset($properties['with']))
-        {
-            if(!is_array($properties['with']))
-            {
-                throw new AnnotationException('The "with" property of the @before annotation must be of type array');
-            }
-            $this->sMethodParams = $properties['with'];
-        }
-        $this->sMethodName = $properties['call'];
-    }
-
-    /**
      * @inheritDoc
      */
-    public function getName(): string
+    protected static function getType(): string
     {
-        return '__before';
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getValue()
-    {
-        if(is_array($this->xPrevValue))
-        {
-            // Add the current value to the array
-            $this->xPrevValue[$this->sMethodName] = $this->sMethodParams;
-            return $this->xPrevValue;
-        }
-        // Return the current value in an array
-        return [$this->sMethodName => $this->sMethodParams];
+        return 'before';
     }
 }

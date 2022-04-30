@@ -15,8 +15,9 @@
 namespace Jaxon\Annotations\Annotation;
 
 use mindplay\annotations\Annotation;
+use mindplay\annotations\IAnnotationParser;
 
-abstract class AbstractAnnotation extends Annotation
+abstract class AbstractAnnotation extends Annotation implements IAnnotationParser
 {
     /**
      * @var mixed
