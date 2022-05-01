@@ -76,7 +76,7 @@ class JaxonExample
      */
     public function do()
     {
-        // This method will not be exported to javascript.
+        // This method will be exported to javascript.
     }
 
     /**
@@ -146,7 +146,7 @@ class JaxonExample
 
     /**
      * @before('call' => 'funcBefore1')
-     * @before('call' => 'funcBefore2', 'with' => ['param1', 'param2'])
+     * @before('call' => 'funcBefore2', 'with' => ['value1', 'value2'])
      */
     public function action()
     {
@@ -171,7 +171,7 @@ class JaxonExample
 
     /**
      * @before funcBefore1
-     * @before funcBefore2 ["param1", "param2"]
+     * @before funcBefore2 ["value1", "value2"]
      */
     public function action()
     {
@@ -200,7 +200,7 @@ class JaxonExample
 
     /**
      * @after('call' => 'funcAfter1')
-     * @after('call' => 'funcAfter2', 'with' => ['param'])
+     * @after('call' => 'funcAfter2', 'with' => ['value'])
      */
     public function action()
     {
@@ -225,7 +225,7 @@ class JaxonExample
 
     /**
      * @after funcAfter1
-     * @after funcAfter2 ["param"]
+     * @after funcAfter2 ["value"]
      */
     public function action()
     {
