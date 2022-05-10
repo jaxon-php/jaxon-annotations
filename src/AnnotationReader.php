@@ -34,7 +34,7 @@ use function array_merge;
 use function count;
 use function is_a;
 
-class AnnotationReader
+class AnnotationReader implements AnnotationReaderInterface
 {
     /**
      * @var AnnotationManager
@@ -190,7 +190,7 @@ class AnnotationReader
      * @return array
      * @throws SetupException
      */
-    public function getAttributes(string $sClass, array $aMethods, array $aProperties = []): array
+    public function getAttributes(string $sClass, array $aMethods = [], array $aProperties = []): array
     {
         try
         {
