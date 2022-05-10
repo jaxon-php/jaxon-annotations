@@ -89,8 +89,10 @@ class AnnotationReader implements AnnotationReaderInterface
         {
             return;
         }
-
-        $di->val('jaxon_annotations_cache_dir', sys_get_temp_dir());
+        if(!$di->h('jaxon_annotations_cache_dir'))
+        {
+            $di->val('jaxon_annotations_cache_dir', sys_get_temp_dir());
+        }
         $di->set(AnnotationReader::class, function($c) {
             $xAnnotationManager = new AnnotationManager();
             $xAnnotationManager->cache = new AnnotationCache($c->g('jaxon_annotations_cache_dir'));
