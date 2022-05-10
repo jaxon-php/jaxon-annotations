@@ -25,7 +25,6 @@ use function is_string;
 use function ltrim;
 use function preg_match;
 use function preg_split;
-use function rtrim;
 
 /**
  * Specifies attributes to inject into a callable object.
@@ -34,6 +33,13 @@ use function rtrim;
  */
 class ContainerAnnotation extends AbstractAnnotation implements IAnnotationFileAware
 {
+    /**
+     * The annotation properties
+     *
+     * @var array
+     */
+    protected $properties = [];
+
     /**
      * The attribute name
      *
@@ -52,11 +58,6 @@ class ContainerAnnotation extends AbstractAnnotation implements IAnnotationFileA
      * @var AnnotationFile
      */
     protected $xClassFile;
-
-    /**
-     * @var string
-     */
-    public static $sMemberType;
 
     /**
      * @inheritDoc
@@ -92,99 +93,18 @@ class ContainerAnnotation extends AbstractAnnotation implements IAnnotationFileA
         // We need to know which type of class member the annotation is attached to (attribute,
         // method or class), which is possible only when calling the initAnnotation() method.
         // So we just return raw data in a custom format here.
-        return ['__raw' => $value];
-    }
-
-    /**
-     * @param string $value
-     *
-     * @return array
-     * @throws AnnotationException
-     */
-    protected function parseValue(string $value): array
-    {
-        $aParams = preg_split("/[\s]+/", $value, 3);
-        $nParamCount = count($aParams);
-        if($nParamCount === 1)
-        {
-            // For a property, the only parameter is the class. Otherwise, it is the attribute.
-            if(self::$sMemberType === AnnotationManager::MEMBER_PROPERTY)
-            {
-                $sClass = rtrim($aParams[0]);
-                if(substr($sClass, 0, 1) === '$')
-                {
-                    throw new AnnotationException('The only property of the @di annotation must be a class name');
-                }
-                return ['class' => $sClass];
-            }
-            $sAttr = rtrim($aParams[0]);
-            if(substr($sAttr, 0, 1) !== '$')
-            {
-                throw new AnnotationException('The only property of the @di annotation must be a var name');
-            }
-            return ['attr' => substr($sAttr,1)];
-        }
-        if($nParamCount === 2)
-        {
-            if(self::$sMemberType === AnnotationManager::MEMBER_PROPERTY)
-            {
-                throw new AnnotationException('The @di annotation accepts only one property on a class attribute');
-            }
-            $sAttr = rtrim($aParams[0]);
-            if(substr($sAttr, 0, 1) !== '$')
-            {
-                throw new AnnotationException('The only property of the @di annotation must be a var name');
-            }
-            $sClass = rtrim($aParams[1]);
-            if(substr($sClass, 0, 1) === '$')
-            {
-                throw new AnnotationException('The first property of the @di annotation must be a class name');
-            }
-            // For a property, having 2 parameters is not allowed.
-            return ['attr' => substr($sAttr,1), 'class' => $sClass];
-        }
-
-        throw new AnnotationException('The @di annotation only accepts one or two properties');
+        return ['__value__' => $value];
     }
 
     /**
      * @inheritDoc
-     * @throws AnnotationException
      */
     public function initAnnotation(array $properties)
     {
-        if(isset($properties['__raw']))
-        {
-            $properties = $this->parseValue($properties['__raw']);
-        }
-        $nCount = count($properties);
-        if($nCount > 2 ||
-            ($nCount === 2 && !(isset($properties['attr']) && isset($properties['class']))) ||
-            ($nCount === 1 && !(isset($properties['attr']) || isset($properties['class']))))
-        {
-            throw new AnnotationException('The @di annotation accepts only "attr" or "class" as properties');
-        }
-
-        if(isset($properties['attr']))
-        {
-            if(self::$sMemberType === AnnotationManager::MEMBER_PROPERTY)
-            {
-                throw new AnnotationException('The @di annotation does not allow the "attr" property on class attributes');
-            }
-            if(!is_string($properties['attr']))
-            {
-                throw new AnnotationException('The @di annotation requires a property "attr" of type string');
-            }
-            $this->sAttr = $properties['attr'];
-        }
-        if(isset($properties['class']))
-        {
-            if(!is_string($properties['class']))
-            {
-                throw new AnnotationException('The @di annotation requires a property "class" of type string');
-            }
-            $this->sClass = ltrim($this->xClassFile->resolveType($properties['class']), '\\');
-        }
+        // We need to know which type of class member the annotation is attached to (attribute,
+        // method or class), which is possible only when calling the initAnnotation() method.
+        // So we just save the properties locally here.
+        $this->properties = $properties;
     }
 
     /**
@@ -208,11 +128,111 @@ class ContainerAnnotation extends AbstractAnnotation implements IAnnotationFileA
     }
 
     /**
+     * @param string $sClassName
+     *
+     * @return string
+     */
+    private function getFullClassName(string $sClassName): string
+    {
+        return ltrim($this->xClassFile->resolveType($sClassName), '\\');;
+    }
+
+    /**
+     * @return void
+     * @throws AnnotationException
+     */
+    private function parseValue()
+    {
+        $value = $this->properties['__value__'];
+        $aParams = preg_split("/[\s]+/", $value, 3);
+        $nParamCount = count($aParams);
+        if($nParamCount === 1)
+        {
+            // For a property, the only parameter is the class. Otherwise, it is the attribute.
+            if($this->xReader->getMemberType() === AnnotationManager::MEMBER_PROPERTY)
+            {
+                if(substr($aParams[0], 0, 1) === '$')
+                {
+                    throw new AnnotationException('The only property of the @di annotation must be a class name');
+                }
+                $this->sClass = $this->getFullClassName($aParams[0]);
+                return;
+            }
+            if(substr($aParams[0], 0, 1) !== '$')
+            {
+                throw new AnnotationException('The only property of the @di annotation must be a var name');
+            }
+            $this->sAttr = substr($aParams[0], 1);
+            return;
+        }
+        if($nParamCount === 2)
+        {
+            // For a property, having 2 parameters is not allowed.
+            if($this->xReader->getMemberType() === AnnotationManager::MEMBER_PROPERTY)
+            {
+                throw new AnnotationException('The @di annotation accepts only one property on a class attribute');
+            }
+
+            if(substr($aParams[0], 0, 1) !== '$')
+            {
+                throw new AnnotationException('The only property of the @di annotation must be a var name');
+            }
+            if(substr($aParams[1], 0, 1) === '$')
+            {
+                throw new AnnotationException('The first property of the @di annotation must be a class name');
+            }
+            $this->sAttr = substr($aParams[0], 1);
+            $this->sClass = $this->getFullClassName($aParams[1]);
+            return;
+        }
+
+        throw new AnnotationException('The @di annotation only accepts one or two properties');
+    }
+
+    /**
+     * @return void
+     * @throws AnnotationException
+     */
+    private function parseProperties()
+    {
+        $nCount = count($this->properties);
+        if($nCount > 2 ||
+            ($nCount === 2 && !(isset($this->properties['attr']) && isset($this->properties['class']))) ||
+            ($nCount === 1 && !(isset($this->properties['attr']) || isset($this->properties['class']))))
+        {
+            throw new AnnotationException('The @di annotation accepts only "attr" or "class" as properties');
+        }
+
+        if(isset($this->properties['attr']))
+        {
+            if($this->xReader->getMemberType() === AnnotationManager::MEMBER_PROPERTY)
+            {
+                throw new AnnotationException('The @di annotation does not allow the "attr" property on class attributes');
+            }
+            if(!is_string($this->properties['attr']))
+            {
+                throw new AnnotationException('The @di annotation requires a property "attr" of type string');
+            }
+            $this->sAttr = $this->properties['attr'];
+        }
+        if(isset($this->properties['class']))
+        {
+            if(!is_string($this->properties['class']))
+            {
+                throw new AnnotationException('The @di annotation requires a property "class" of type string');
+            }
+            $this->sClass = $this->getFullClassName($this->properties['class']);
+        }
+    }
+
+    /**
      * @inheritDoc
      * @throws AnnotationException
      */
     public function getValue()
     {
+        isset($this->properties['__value__']) ? $this->parseValue() : $this->parseProperties();
+
         // The type in the @di annotations can be set from the values in the @var annotations
         $aPropTypes = $this->xReader->getPropTypes();
         if($this->sClass === '' && isset($aPropTypes[$this->sAttr]))
@@ -228,6 +248,7 @@ class ContainerAnnotation extends AbstractAnnotation implements IAnnotationFileA
         {
             throw new AnnotationException($this->sClass . ' is not a valid "class" value for the @di annotation');
         }
+
         if(is_array($this->xPrevValue))
         {
             $this->xPrevValue[$this->sAttr] = $this->sClass; // Append the current value to the array

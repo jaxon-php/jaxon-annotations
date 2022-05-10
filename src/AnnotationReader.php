@@ -49,6 +49,13 @@ class AnnotationReader
     protected $aPropTypes;
 
     /**
+     * The type of the class member being currently processed.
+     *
+     * @var string
+     */
+    protected $sMemberType;
+
+    /**
      * The constructor
      *
      * @param AnnotationManager $xManager
@@ -98,6 +105,14 @@ class AnnotationReader
     public function getPropTypes(): array
     {
         return $this->aPropTypes;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMemberType(): string
+    {
+        return $this->sMemberType;
     }
 
     /**
@@ -180,7 +195,7 @@ class AnnotationReader
         try
         {
             // Processing properties annotations
-            ContainerAnnotation::$sMemberType = AnnotationManager::MEMBER_PROPERTY;
+            $this->sMemberType = AnnotationManager::MEMBER_PROPERTY;
 
             $this->aPropTypes = [];
             $aPropAttrs = [];
@@ -196,7 +211,7 @@ class AnnotationReader
             }
 
             // Processing class annotations
-            ContainerAnnotation::$sMemberType = AnnotationManager::MEMBER_CLASS;
+            $this->sMemberType = AnnotationManager::MEMBER_CLASS;
 
             $aClassAttrs = $this->filterAnnotations($this->xManager->getClassAnnotations($sClass));
             if(isset($aClassAttrs['protected']))
@@ -217,7 +232,7 @@ class AnnotationReader
             }
 
             // Processing methods annotations
-            ContainerAnnotation::$sMemberType = AnnotationManager::MEMBER_METHOD;
+            $this->sMemberType = AnnotationManager::MEMBER_METHOD;
 
             $aProtected = [];
             foreach($aMethods as $sMethod)
