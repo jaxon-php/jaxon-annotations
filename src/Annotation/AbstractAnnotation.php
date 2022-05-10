@@ -14,14 +14,29 @@
 
 namespace Jaxon\Annotations\Annotation;
 
+use Jaxon\Annotations\AnnotationReader;
 use mindplay\annotations\Annotation;
+use mindplay\annotations\IAnnotationParser;
 
-abstract class AbstractAnnotation extends Annotation
+abstract class AbstractAnnotation extends Annotation implements IAnnotationParser
 {
+    /**
+     * @var AnnotationReader
+     */
+    protected $xReader;
+
     /**
      * @var mixed
      */
     protected $xPrevValue = null;
+
+    /**
+     * @param AnnotationReader $xReader
+     */
+    public function setReader(AnnotationReader $xReader): void
+    {
+        $this->xReader = $xReader;
+    }
 
     /**
      * Set the attribute previous value

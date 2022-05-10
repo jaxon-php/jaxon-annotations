@@ -19,6 +19,8 @@ use mindplay\annotations\AnnotationException;
 use function count;
 use function is_array;
 use function is_string;
+use function preg_match;
+use function preg_split;
 
 /**
  * Specifies a data bag stored in the browser and included in ajax requests to a method.
@@ -36,13 +38,36 @@ class DataBagAnnotation extends AbstractAnnotation
 
     /**
      * @inheritDoc
+     */
+    public static function parseAnnotation($value)
+    {
+        $aParams = preg_split("/[\s]+/", $value, 2);
+        return count($aParams) === 1 ? ['name' => $aParams[0]] : ['name' => $aParams[0], 'extra' => $aParams[1]];
+    }
+
+    /**
+     * @param string $sDataBagName
+     *
+     * @return bool
+     */
+    protected function validateDataBagName(string $sDataBagName): bool
+    {
+        return preg_match('/^[a-zA-Z][a-zA-Z0-9_\-\.]*$/', $sDataBagName) > 0;
+    }
+
+    /**
+     * @inheritDoc
      * @throws AnnotationException
      */
     public function initAnnotation(array $properties)
     {
-        if(count($properties) != 1 || !isset($properties['name']) || !is_string($properties['name']))
+        if(count($properties) !== 1 || !isset($properties['name']) || !is_string($properties['name']))
         {
             throw new AnnotationException('The @databag annotation requires a property "name" of type string');
+        }
+        if(!$this->validateDataBagName($properties['name']))
+        {
+            throw new AnnotationException($properties['name'] . ' is not a valid "name" value for the @databag annotation');
         }
         $this->sName = $properties['name'];
     }

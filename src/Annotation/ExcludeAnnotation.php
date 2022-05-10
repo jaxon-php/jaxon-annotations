@@ -35,6 +35,22 @@ class ExcludeAnnotation extends AbstractAnnotation
 
     /**
      * @inheritDoc
+     */
+    public static function parseAnnotation($value)
+    {
+        if($value === 'true')
+        {
+            return [true];
+        }
+        if($value === 'false')
+        {
+            return [false];
+        }
+        return [$value];
+    }
+
+    /**
+     * @inheritDoc
      * @throws AnnotationException
      */
     public function initAnnotation(array $properties)
@@ -42,7 +58,7 @@ class ExcludeAnnotation extends AbstractAnnotation
         if(count($properties) !== 0 &&
             (count($properties) !== 1 || !isset($properties[0]) || !is_bool($properties[0])))
         {
-            throw new AnnotationException('the @exclude annotation requires a boolean or no property');
+            throw new AnnotationException('the @exclude annotation requires a single boolean or no property');
         }
         $this->bValue = $properties[0] ?? true;
     }

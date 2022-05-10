@@ -12,6 +12,10 @@ Annotations for the Jaxon library
 =================================
 
 This package provides annotation support for the Jaxon library.
+The configuration options that are related to Jaxon classes can be set directly in the class files using annotations.
+
+Two different syntax are allowed for annotations: the default array-like syntax, and an alternative docblock-like syntax,
+available since version `1.4`.
 
 Installation
 ------------
@@ -23,12 +27,10 @@ It requires `jaxon-php/jaxon-core` v4 or higher.
 composer require jaxon-php/jaxon-annotations
 ```
 
-Register the annotation reader with Jaxon.
+Set the annotation config option to on.
 
 ```php
-use Jaxon\Annotations\AnnotationReader;
-
-AnnotationReader::register();
+jaxon()->setOption('core.annotations.on', true);
 ```
 
 Usage
@@ -64,6 +66,29 @@ class JaxonExample
 }
 ```
 
+The docblock like syntax can also be used.
+
+```php
+class JaxonExample
+{
+    /**
+     * @exclude false
+     */
+    public function do()
+    {
+        // This method will be exported to javascript.
+    }
+
+    /**
+     * @exclude true
+     */
+    public function doNot()
+    {
+        // This method will not be exported to javascript.
+    }
+}
+```
+
 ### @upload
 
 It adds file upload to an ajax request.
@@ -75,6 +100,22 @@ class JaxonExample extends \Jaxon\App\CallableClass
 {
     /**
      * @upload('field' => 'div-user-file')
+     */
+    public function saveFile()
+    {
+        // Get the uploaded files.
+        $files = $this->upload()->files();
+    }
+}
+```
+
+The docblock like syntax can also be used.
+
+```php
+class JaxonExample extends \Jaxon\App\CallableClass
+{
+    /**
+     * @upload div-user-file
      */
     public function saveFile()
     {
@@ -105,7 +146,32 @@ class JaxonExample
 
     /**
      * @before('call' => 'funcBefore1')
-     * @before('call' => 'funcBefore2', 'with' => ['param1', 'param2'])
+     * @before('call' => 'funcBefore2', 'with' => ['value1', 'value2'])
+     */
+    public function action()
+    {
+    }
+}
+```
+
+The docblock like syntax can also be used.
+
+```php
+class JaxonExample
+{
+    protected function funcBefore1()
+    {
+        // Do something
+    }
+
+    protected function funcBefore2($param1, $param2)
+    {
+        // Do something with parameters
+    }
+
+    /**
+     * @before funcBefore1
+     * @before funcBefore2 ["value1", "value2"]
      */
     public function action()
     {
@@ -134,7 +200,32 @@ class JaxonExample
 
     /**
      * @after('call' => 'funcAfter1')
-     * @after('call' => 'funcAfter2', 'with' => ['param'])
+     * @after('call' => 'funcAfter2', 'with' => ['value'])
+     */
+    public function action()
+    {
+    }
+}
+```
+
+The docblock like syntax can also be used.
+
+```php
+class JaxonExample
+{
+    protected function funcAfter1()
+    {
+        // Do something
+    }
+
+    protected function funcAfter2($param)
+    {
+        // Do something with parameter
+    }
+
+    /**
+     * @after funcAfter1
+     * @after funcAfter2 ["value"]
      */
     public function action()
     {
@@ -163,11 +254,28 @@ class JaxonExample extends \Jaxon\App\CallableClass
 }
 ```
 
+The docblock like syntax can also be used.
+
+```php
+class JaxonExample extends \Jaxon\App\CallableClass
+{
+    /**
+     * @databag user
+     */
+    public function action()
+    {
+        // Update a value in the data bag.
+        $count = $this->bag('user')->get('count', 0);
+        $this->bag('user')->set('count', $count++);
+    }
+}
+```
+
 ### @di
 
 It defines an attribute that will be injected in a class.
-It takes the name and the class of the attribute as mandatory parameters.
-It applies to methods and classes.
+
+When applied on methods and classes, it takes the name and the class of the attribute as parameters.
 
 ```php
 class JaxonExample extends \Jaxon\App\CallableClass
@@ -188,7 +296,64 @@ class JaxonExample extends \Jaxon\App\CallableClass
 }
 ```
 
-If the class name does not start with a `\`, then the corresponding fully qualified name (FQN) will be set using
+The class parameter is optional, and can be omitted if it is already specified by a `@var` annotation.
+
+```php
+class JaxonExample extends \Jaxon\App\CallableClass
+{
+    /**
+     * @var \App\Services\Translator
+     */
+     protected $translator;
+
+    /**
+     * @di('attr' => 'translator')
+     */
+    public function translate(string $phrase)
+    {
+        // The $translator property is set from the DI container when this method is called.
+        $phrase = $this->translator->translate($phrase);
+    }
+}
+```
+
+When applied on attributes, it takes the class of the attribute as only parameter, which can be omitted if it is already specified by a `@var` annotation.
+
+```php
+class JaxonExample extends \Jaxon\App\CallableClass
+{
+    /**
+     * @di(class => '\App\Services\Translator')
+     * @var \App\Services\Translator
+     */
+     protected $translator;
+
+    public function translate(string $phrase)
+    {
+        // The $translator property is set from the DI container when this method is called.
+        $phrase = $this->translator->translate($phrase);
+    }
+}
+```
+
+```php
+class JaxonExample extends \Jaxon\App\CallableClass
+{
+    /**
+     * @di
+     * @var \App\Services\Translator
+     */
+     protected $translator;
+
+    public function translate(string $phrase)
+    {
+        // The $translator property is set from the DI container when this method is called.
+        $phrase = $this->translator->translate($phrase);
+    }
+}
+```
+
+If the class name does not start with a `"\"`, then the corresponding fully qualified name (FQN) will be set using
 either the `use` instructions or the `namespace` in its source file.
 
 ```php
@@ -212,6 +377,96 @@ class JaxonExample extends \Jaxon\App\CallableClass
      * @di('attr' => 'translator', class => 'Translator')
      * @di('attr' => 'formatter', class => 'Formatter')
      */
+    public function translate(string $phrase)
+    {
+        // The Translator FQN is defined by the use instruction => App\Services\Translator.
+        // The Formatter FQN is defined by the current namespace => App\Ajax\Formatter.
+        $phrase = $this->formatter->format($this->translator->translate($phrase));
+    }
+}
+```
+
+The docblock like syntax can also be used.
+
+```php
+namespace App\Ajax;
+
+use App\Services\Translator;
+
+class JaxonExample extends \Jaxon\App\CallableClass
+{
+    /**
+     * @var Translator
+     */
+     protected $translator;
+
+    /**
+     * @var Formatter
+     */
+     protected $formatter;
+
+    /**
+     * @di $translator   Translator
+     * @di $formatter    Formatter
+     */
+    public function translate(string $phrase)
+    {
+        // The Translator FQN is defined by the use instruction => App\Services\Translator.
+        // The Formatter FQN is defined by the current namespace => App\Ajax\Formatter.
+        $phrase = $this->formatter->format($this->translator->translate($phrase));
+    }
+}
+```
+
+```php
+namespace App\Ajax;
+
+use App\Services\Translator;
+
+/**
+ * @di $translator   Translator
+ * @di $formatter    Formatter
+ */
+class JaxonExample extends \Jaxon\App\CallableClass
+{
+    /**
+     * @var Translator
+     */
+     protected $translator;
+
+    /**
+     * @var Formatter
+     */
+     protected $formatter;
+
+    public function translate(string $phrase)
+    {
+        // The Translator FQN is defined by the use instruction => App\Services\Translator.
+        // The Formatter FQN is defined by the current namespace => App\Ajax\Formatter.
+        $phrase = $this->formatter->format($this->translator->translate($phrase));
+    }
+}
+```
+
+```php
+namespace App\Ajax;
+
+use App\Services\Translator;
+
+class JaxonExample extends \Jaxon\App\CallableClass
+{
+    /**
+     * @di  Translator
+     * @var Translator
+     */
+     protected $translator;
+
+    /**
+     * @di  Formatter
+     * @var Formatter
+     */
+     protected $formatter;
+
     public function translate(string $phrase)
     {
         // The Translator FQN is defined by the use instruction => App\Services\Translator.
