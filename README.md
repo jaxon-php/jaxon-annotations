@@ -274,8 +274,7 @@ class JaxonExample extends \Jaxon\App\CallableClass
 ### @di
 
 It defines an attribute that will be injected in a class.
-It takes the name and the class of the attribute as mandatory parameters.
-It applies to methods and classes.
+When applied on methods and classes, it takes the name and the class of the attribute as mandatory parameters.
 
 ```php
 class JaxonExample extends \Jaxon\App\CallableClass
@@ -288,6 +287,42 @@ class JaxonExample extends \Jaxon\App\CallableClass
     /**
      * @di('attr' => 'translator', class => '\App\Services\Translator')
      */
+    public function translate(string $phrase)
+    {
+        // The $translator property is set from the DI container when this method is called.
+        $phrase = $this->translator->translate($phrase);
+    }
+}
+```
+
+When applied on attributes, it takes the class of the attribute as only parameter, which can be omitted if it is already specified by a `@var` annotation.
+
+```php
+class JaxonExample extends \Jaxon\App\CallableClass
+{
+    /**
+     * @di(class => '\App\Services\Translator')
+     * @var \App\Services\Translator
+     */
+     protected $translator;
+
+    public function translate(string $phrase)
+    {
+        // The $translator property is set from the DI container when this method is called.
+        $phrase = $this->translator->translate($phrase);
+    }
+}
+```
+
+```php
+class JaxonExample extends \Jaxon\App\CallableClass
+{
+    /**
+     * @di
+     * @var \App\Services\Translator
+     */
+     protected $translator;
+
     public function translate(string $phrase)
     {
         // The $translator property is set from the DI container when this method is called.
@@ -349,9 +384,67 @@ class JaxonExample extends \Jaxon\App\CallableClass
      protected $formatter;
 
     /**
-     * @di translator   Translator
-     * @di formatter    Formatter
+     * @di $translator   Translator
+     * @di $formatter    Formatter
      */
+    public function translate(string $phrase)
+    {
+        // The Translator FQN is defined by the use instruction => App\Services\Translator.
+        // The Formatter FQN is defined by the current namespace => App\Ajax\Formatter.
+        $phrase = $this->formatter->format($this->translator->translate($phrase));
+    }
+}
+```
+
+```php
+namespace App\Ajax;
+
+use App\Services\Translator;
+
+/**
+ * @di $translator   Translator
+ * @di $formatter    Formatter
+ */
+class JaxonExample extends \Jaxon\App\CallableClass
+{
+    /**
+     * @var Translator
+     */
+     protected $translator;
+
+    /**
+     * @var Formatter
+     */
+     protected $formatter;
+
+    public function translate(string $phrase)
+    {
+        // The Translator FQN is defined by the use instruction => App\Services\Translator.
+        // The Formatter FQN is defined by the current namespace => App\Ajax\Formatter.
+        $phrase = $this->formatter->format($this->translator->translate($phrase));
+    }
+}
+```
+
+```php
+namespace App\Ajax;
+
+use App\Services\Translator;
+
+class JaxonExample extends \Jaxon\App\CallableClass
+{
+    /**
+     * @di  Translator
+     * @var Translator
+     */
+     protected $translator;
+
+    /**
+     * @di  Formatter
+     * @var Formatter
+     */
+     protected $formatter;
+
     public function translate(string $phrase)
     {
         // The Translator FQN is defined by the use instruction => App\Services\Translator.

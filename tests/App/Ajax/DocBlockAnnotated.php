@@ -8,16 +8,9 @@ use Jaxon\Annotations\Tests\Service\ColorService;
 class DocBlockAnnotated extends CallableClass
 {
     /**
-     * @exclude
-     */
-    public function doNot()
-    {
-    }
-
-    /**
      * @exclude true
      */
-    public function doNotBool()
+    public function doNot()
     {
     }
 
@@ -158,44 +151,44 @@ class DocBlockAnnotated extends CallableClass
     }
 
     /**
-     * @di colorService ColorService
-     * @di fontService FontService
+     * @di $colorService ColorService
+     * @di $fontService FontService
      */
     public function di1()
     {
     }
 
     /**
-     * @di colorService ColorService
-     * @di textService \Jaxon\Annotations\Tests\Service\TextService
+     * @di $colorService ColorService
+     * @di $textService \Jaxon\Annotations\Tests\Service\TextService
      */
     public function di2()
     {
     }
 
     /**
-     * @di color.Service ColorService
+     * @di $color.Service ColorService
      */
     public function diErrorAttr()
     {
     }
 
     /**
-     * @di colorService Color.Service
+     * @di $colorService Color.Service
      */
     public function diErrorClass()
     {
     }
 
     /**
-     * @di colorService
+     * @di $colorService
      */
     public function diErrorOneParam()
     {
     }
 
     /**
-     * @di colorService ColorService TextService
+     * @di $colorService ColorService TextService
      */
     public function diErrorThreeParams()
     {

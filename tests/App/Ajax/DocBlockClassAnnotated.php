@@ -14,9 +14,9 @@ use Jaxon\Annotations\Tests\Service\TextService;
  * @after funcAfter1
  * @after funcAfter2
  * @after funcAfter3
- * @di colorService \Jaxon\Annotations\Tests\Service\ColorService
- * @di textService TextService
- * @di fontService FontService
+ * @di $colorService \Jaxon\Annotations\Tests\Service\ColorService
+ * @di $textService TextService
+ * @di $fontService FontService
  */
 class DocBlockClassAnnotated extends CallableClass
 {

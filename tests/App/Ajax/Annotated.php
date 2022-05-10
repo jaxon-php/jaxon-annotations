@@ -160,9 +160,16 @@ class Annotated extends CallableClass
     }
 
     /**
-     * @di('attr' => 'attr', 'class' => true)
+     * @di('attr' => [], 'class' => 'ClassName')
      */
     public function diWrongAttrType()
+    {
+    }
+
+    /**
+     * @di('attr' => 'attr', 'class' => true)
+     */
+    public function diWrongClassType()
     {
     }
 }

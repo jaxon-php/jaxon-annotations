@@ -10,6 +10,8 @@ use Jaxon\Exception\SetupException;
 use PHPUnit\Framework\TestCase;
 
 use function jaxon;
+use function mkdir;
+use function rmdir;
 
 class DocBlockAnnotationTest extends TestCase
 {
@@ -19,17 +21,21 @@ class DocBlockAnnotationTest extends TestCase
     protected $xAnnotationReader;
 
     /**
+     * @var string
+     */
+    protected $sCacheDir;
+
+    /**
      * @throws SetupException
      */
     public function setUp(): void
     {
-        $sCacheDir = __DIR__ . '/../tmp';
-        @unlink($sCacheDir);
-        @mkdir($sCacheDir);
+        $this->sCacheDir = __DIR__ . '/../tmp';
+        @mkdir($this->sCacheDir);
 
         jaxon()->di()->getPluginManager()->registerPlugins();
         AnnotationReader::register(jaxon()->di());
-        jaxon()->di()->val('jaxon_annotations_cache_dir', $sCacheDir);
+        jaxon()->di()->val('jaxon_annotations_cache_dir', $this->sCacheDir);
         $this->xAnnotationReader = jaxon()->di()->g(AnnotationReader::class);
     }
 
@@ -40,6 +46,17 @@ class DocBlockAnnotationTest extends TestCase
     {
         jaxon()->reset();
         parent::tearDown();
+
+        // Delete the temp dir and all its content
+        $aFiles = scandir($this->sCacheDir);
+        foreach ($aFiles as $sFile)
+        {
+            if($sFile !== '.' && $sFile !== '..')
+            {
+                @unlink($this->sCacheDir . DIRECTORY_SEPARATOR . $sFile);
+            }
+        }
+        @rmdir($this->sCacheDir);
     }
 
     /**
