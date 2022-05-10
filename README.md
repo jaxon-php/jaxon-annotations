@@ -274,7 +274,8 @@ class JaxonExample extends \Jaxon\App\CallableClass
 ### @di
 
 It defines an attribute that will be injected in a class.
-When applied on methods and classes, it takes the name and the class of the attribute as mandatory parameters.
+
+When applied on methods and classes, it takes the name and the class of the attribute as parameters.
 
 ```php
 class JaxonExample extends \Jaxon\App\CallableClass
@@ -286,6 +287,27 @@ class JaxonExample extends \Jaxon\App\CallableClass
 
     /**
      * @di('attr' => 'translator', class => '\App\Services\Translator')
+     */
+    public function translate(string $phrase)
+    {
+        // The $translator property is set from the DI container when this method is called.
+        $phrase = $this->translator->translate($phrase);
+    }
+}
+```
+
+The class parameter is optional, and can be omitted if it is already specified by a `@var` annotation.
+
+```php
+class JaxonExample extends \Jaxon\App\CallableClass
+{
+    /**
+     * @var \App\Services\Translator
+     */
+     protected $translator;
+
+    /**
+     * @di('attr' => 'translator')
      */
     public function translate(string $phrase)
     {

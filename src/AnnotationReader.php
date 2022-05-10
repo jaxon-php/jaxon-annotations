@@ -42,7 +42,7 @@ class AnnotationReader
     protected $xManager;
 
     /**
-     * Properties types, read from the "@var annotations"
+     * Properties types, read from the "var" annotations.
      *
      * @var array
      */
