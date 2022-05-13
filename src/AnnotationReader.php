@@ -33,6 +33,7 @@ use function array_filter;
 use function array_merge;
 use function count;
 use function is_a;
+use function sys_get_temp_dir;
 
 class AnnotationReader implements AnnotationReaderInterface
 {
@@ -78,8 +79,8 @@ class AnnotationReader implements AnnotationReaderInterface
     /**
      * Register the annotation reader into the Jaxon DI container
      *
-     * @param bool $bForce Force registration
      * @param Container $di
+     * @param bool $bForce Force registration
      *
      * @return void
      */
@@ -89,13 +90,14 @@ class AnnotationReader implements AnnotationReaderInterface
         {
             return;
         }
-        if(!$di->h('jaxon_annotations_cache_dir'))
+        $sCacheDirKey = 'jaxon_annotations_cache_dir';
+        if(!$di->h($sCacheDirKey))
         {
-            $di->val('jaxon_annotations_cache_dir', sys_get_temp_dir());
+            $di->val($sCacheDirKey, sys_get_temp_dir());
         }
-        $di->set(AnnotationReader::class, function($c) {
+        $di->set(AnnotationReader::class, function($c) use($sCacheDirKey) {
             $xAnnotationManager = new AnnotationManager();
-            $xAnnotationManager->cache = new AnnotationCache($c->g('jaxon_annotations_cache_dir'));
+            $xAnnotationManager->cache = new AnnotationCache($c->g($sCacheDirKey));
             return new AnnotationReader($xAnnotationManager);
         });
         $di->alias(AnnotationReaderInterface::class, AnnotationReader::class);
@@ -137,11 +139,10 @@ class AnnotationReader implements AnnotationReaderInterface
             $sName = $xAnnotation->getName();
             $xAnnotation->setPrevValue($aAttributes[$sName] ?? null);
             $xValue = $xAnnotation->getValue();
-            if($sName === 'protected' && !$xValue)
+            if($sName !== 'protected' || ($xValue)) // Ignore annotation @exclude with value false
             {
-                continue; // Ignore annotation @exclude with value false
+                $aAttributes[$sName] = $xValue;
             }
-            $aAttributes[$sName] = $xValue;
         }
         return $aAttributes;
     }
@@ -205,11 +206,10 @@ class AnnotationReader implements AnnotationReaderInterface
             foreach($aProperties as $sProperty)
             {
                 [$sName, $xValue] = $this->propAnnotations($sProperty, $this->xManager->getPropertyAnnotations($sClass, $sProperty));
-                if(!$xValue)
+                if($xValue !== null)
                 {
-                    continue;
+                    $aPropAttrs[$sName] = array_merge($aPropAttrs[$sName] ?? [], $xValue);
                 }
-                $aPropAttrs[$sName] = array_merge($aPropAttrs[$sName] ?? [], $xValue);
             }
 
             // Processing class annotations
@@ -227,15 +227,10 @@ class AnnotationReader implements AnnotationReaderInterface
                 $aClassAttrs[$sName] = array_merge($aClassAttrs[$sName] ?? [], $xValue);
             }
 
-            $aAttributes = [];
-            if(count($aClassAttrs) > 0)
-            {
-                $aAttributes['*'] = $aClassAttrs;
-            }
-
             // Processing methods annotations
             $this->sMemberType = AnnotationManager::MEMBER_METHOD;
 
+            $aAttributes = count($aClassAttrs) > 0 ? ['*' => $aClassAttrs] : [];
             $aProtected = [];
             foreach($aMethods as $sMethod)
             {
