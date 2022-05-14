@@ -59,17 +59,10 @@ function registerAnnotations()
     $di->set($sEventListenerKey, function() {
         return new class implements ConfigListenerInterface
         {
-            public function onChanges(Config $xConfig)
-            {
-                if($xConfig->getOption('core.annotations.enabled'))
-                {
-                    register(jaxon()->di());
-                }
-            }
-
             public function onChange(Config $xConfig, string $sName)
             {
-                if($sName === 'core.annotations.enabled' && $xConfig->getOption('core.annotations.enabled'))
+                $sConfigKey = 'core.annotations.enabled';
+                if(($sName === $sConfigKey || $sName === '') && $xConfig->getOption($sConfigKey))
                 {
                     register(jaxon()->di());
                 }
