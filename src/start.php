@@ -49,6 +49,11 @@ function registerAnnotations()
 {
     $di = jaxon()->di();
     $sEventListenerKey = AnnotationReader::class . '\\ConfigListener';
+    if($di->h($sEventListenerKey))
+    {
+        return;
+    }
+
     // The annotation package is installed, register the real annotation reader,
     // but only if the feature is activated in the config.
     $di->set($sEventListenerKey, function() {
