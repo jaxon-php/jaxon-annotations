@@ -77,33 +77,6 @@ class AnnotationReader implements AnnotationReaderInterface
     }
 
     /**
-     * Register the annotation reader into the Jaxon DI container
-     *
-     * @param Container $di
-     * @param bool $bForce Force registration
-     *
-     * @return void
-     */
-    public static function register(Container $di, bool $bForce = false)
-    {
-        if(!$bForce && $di->h(AnnotationReader::class))
-        {
-            return;
-        }
-        $sCacheDirKey = 'jaxon_annotations_cache_dir';
-        if(!$di->h($sCacheDirKey))
-        {
-            $di->val($sCacheDirKey, sys_get_temp_dir());
-        }
-        $di->set(AnnotationReader::class, function($c) use($sCacheDirKey) {
-            $xAnnotationManager = new AnnotationManager();
-            $xAnnotationManager->cache = new AnnotationCache($c->g($sCacheDirKey));
-            return new AnnotationReader($xAnnotationManager);
-        });
-        $di->alias(AnnotationReaderInterface::class, AnnotationReader::class);
-    }
-
-    /**
      * @return array
      */
     public function getPropTypes(): array
