@@ -7,7 +7,7 @@ use Jaxon\Annotations\Tests\App\Ajax\AttrAnnotated;
 use Jaxon\Exception\SetupException;
 use PHPUnit\Framework\TestCase;
 
-use function jaxon;
+use function Jaxon\jaxon;
 use function Jaxon\Annotations\registerAnnotations;
 
 class AttrAnnotationTest extends TestCase

@@ -10,7 +10,7 @@ use Jaxon\Utils\Config\Config;
 use mindplay\annotations\AnnotationCache;
 use mindplay\annotations\AnnotationManager;
 
-use function jaxon;
+use function Jaxon\jaxon;
 
 /**
  * Register the annotation reader into the Jaxon DI container
