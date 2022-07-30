@@ -9,7 +9,7 @@ use Jaxon\Annotations\Tests\App\Ajax\DocBlockClassExcluded;
 use Jaxon\Exception\SetupException;
 use PHPUnit\Framework\TestCase;
 
-use function jaxon;
+use function Jaxon\jaxon;
 use function mkdir;
 use function rmdir;
 use function Jaxon\Annotations\registerAnnotations;
