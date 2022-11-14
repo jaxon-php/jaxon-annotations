@@ -18,20 +18,7 @@ use Jaxon\Annotations\Tests\Service\TextService;
  * @di('attr' => 'textService', 'class' => 'TextService')
  * @di('attr' => 'fontService', 'class' => 'FontService')
  */
-class ClassAnnotated extends CallableClass
+class TraitAnnotated extends CallableClass
 {
-    /**
-     * @var \Jaxon\Annotations\Tests\Service\ColorService
-     */
-    protected $colorService;
-
-    /**
-     * @var TextService
-     */
-    protected $textService;
-
-    /**
-     * @var FontService
-     */
-    protected $fontService;
+    use Traits\Annotated;
 }
