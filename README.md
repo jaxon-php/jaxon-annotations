@@ -30,7 +30,7 @@ composer require jaxon-php/jaxon-annotations
 Set the annotation config option to on.
 
 ```php
-jaxon()->setOption('core.annotations.on', true);
+jaxon()->setOption('core.annotations.enabled', true);
 ```
 
 Usage
