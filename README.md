@@ -66,7 +66,7 @@ class JaxonExample
 }
 ```
 
-The docblock like syntax can also be used.
+The PHP-DOC syntax can also be used.
 
 ```php
 class JaxonExample
@@ -109,7 +109,7 @@ class JaxonExample extends \Jaxon\App\CallableClass
 }
 ```
 
-The docblock like syntax can also be used.
+The PHP-DOC syntax can also be used.
 
 ```php
 class JaxonExample extends \Jaxon\App\CallableClass
@@ -154,7 +154,7 @@ class JaxonExample
 }
 ```
 
-The docblock like syntax can also be used.
+The PHP-DOC syntax can also be used.
 
 ```php
 class JaxonExample
@@ -208,7 +208,7 @@ class JaxonExample
 }
 ```
 
-The docblock like syntax can also be used.
+The PHP-DOC syntax can also be used.
 
 ```php
 class JaxonExample
@@ -254,7 +254,7 @@ class JaxonExample extends \Jaxon\App\CallableClass
 }
 ```
 
-The docblock like syntax can also be used.
+The PHP-DOC syntax can also be used.
 
 ```php
 class JaxonExample extends \Jaxon\App\CallableClass
@@ -386,7 +386,7 @@ class JaxonExample extends \Jaxon\App\CallableClass
 }
 ```
 
-The docblock like syntax can also be used.
+The PHP-DOC syntax can also be used.
 
 ```php
 namespace App\Ajax;
