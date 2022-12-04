@@ -1,4 +1,4 @@
-[![Build Status](https://api.travis-ci.com/jaxon-php/jaxon-annotations.svg?branch=main)](https://app.travis-ci.com/github/jaxon-php/jaxon-annotations)
+[![Build Status](https://github.com/jaxon-php/jaxon-annotations/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/jaxon-php/jaxon-annotations/actions)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/jaxon-php/jaxon-annotations/badges/quality-score.png?b=main)](https://scrutinizer-ci.com/g/jaxon-php/jaxon-annotations/?branch=main)
 [![StyleCI](https://styleci.io/repos/481695775/shield?branch=main)](https://styleci.io/repos/481695775)
 [![codecov](https://codecov.io/gh/jaxon-php/jaxon-annotations/branch/main/graph/badge.svg?token=HERKC60CC1)](https://codecov.io/gh/jaxon-php/jaxon-annotations)
