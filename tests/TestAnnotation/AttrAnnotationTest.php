@@ -13,6 +13,11 @@ use function Jaxon\Annotations\registerAnnotations;
 class AttrAnnotationTest extends TestCase
 {
     /**
+     * @var string
+     */
+    protected $sCacheDir;
+
+    /**
      * @var AnnotationReader
      */
     protected $xAnnotationReader;
@@ -58,8 +63,10 @@ class AttrAnnotationTest extends TestCase
      */
     public function testContainerAnnotation()
     {
-        [$bExcluded, $aProperties, ] = $this->xAnnotationReader->getAttributes(AttrAnnotated::class,
+        $aAttributes = $this->xAnnotationReader->getAttributes(AttrAnnotated::class,
             ['attrVar'], ['colorService', 'fontService', 'textService']);
+        $bExcluded = $aAttributes[0];
+        $aProperties = $aAttributes[1];
 
         $this->assertFalse($bExcluded);
 
@@ -76,8 +83,10 @@ class AttrAnnotationTest extends TestCase
      */
     public function testContainerDocBlockAnnotation()
     {
-        [$bExcluded, $aProperties, ] = $this->xAnnotationReader->getAttributes(AttrAnnotated::class,
+        $aAttributes = $this->xAnnotationReader->getAttributes(AttrAnnotated::class,
             ['attrDbVar'], ['colorService', 'fontService', 'textService']);
+        $bExcluded = $aAttributes[0];
+        $aProperties = $aAttributes[1];
 
         $this->assertFalse($bExcluded);
 
@@ -94,8 +103,10 @@ class AttrAnnotationTest extends TestCase
      */
     public function testContainerDiAnnotation()
     {
-        [$bExcluded, $aProperties, ] = $this->xAnnotationReader->getAttributes(AttrAnnotated::class,
+        $aAttributes = $this->xAnnotationReader->getAttributes(AttrAnnotated::class,
             ['attrDi'], ['colorService1', 'fontService1', 'textService1']);
+        $bExcluded = $aAttributes[0];
+        $aProperties = $aAttributes[1];
 
         $this->assertFalse($bExcluded);
 
@@ -112,8 +123,10 @@ class AttrAnnotationTest extends TestCase
      */
     public function testContainerDiAndVarAnnotation()
     {
-        [$bExcluded, $aProperties, ] = $this->xAnnotationReader->getAttributes(AttrAnnotated::class,
+        $aAttributes = $this->xAnnotationReader->getAttributes(AttrAnnotated::class,
             ['attrDi'], ['colorService2', 'fontService2', 'textService2']);
+        $bExcluded = $aAttributes[0];
+        $aProperties = $aAttributes[1];
 
         $this->assertFalse($bExcluded);
 
@@ -130,8 +143,10 @@ class AttrAnnotationTest extends TestCase
      */
     public function testContainerPropAnnotation()
     {
-        [$bExcluded, $aProperties, ] = $this->xAnnotationReader->getAttributes(AttrAnnotated::class,
+        $aAttributes = $this->xAnnotationReader->getAttributes(AttrAnnotated::class,
             ['attrDi'], ['colorService3', 'fontService3', 'textService3']);
+        $bExcluded = $aAttributes[0];
+        $aProperties = $aAttributes[1];
 
         $this->assertFalse($bExcluded);
 

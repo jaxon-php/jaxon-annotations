@@ -17,14 +17,14 @@ use function Jaxon\Annotations\registerAnnotations;
 class DocBlockAnnotationTest extends TestCase
 {
     /**
-     * @var AnnotationReader
-     */
-    protected $xAnnotationReader;
-
-    /**
      * @var string
      */
     protected $sCacheDir;
+
+    /**
+     * @var AnnotationReader
+     */
+    protected $xAnnotationReader;
 
     /**
      * @throws SetupException
@@ -70,7 +70,10 @@ class DocBlockAnnotationTest extends TestCase
         // Can be called multiple times without error.
         registerAnnotations();
 
-        [$bExcluded, $aProperties, $aProtected] = $this->xAnnotationReader->getAttributes(DocBlockAnnotated::class, ['saveFiles', 'doNot']);
+        $aAttributes = $this->xAnnotationReader->getAttributes(DocBlockAnnotated::class, ['saveFiles', 'doNot']);
+        $bExcluded = $aAttributes[0];
+        $aProperties = $aAttributes[1];
+        $aProtected = $aAttributes[2];
 
         $this->assertFalse($bExcluded);
 
@@ -88,7 +91,9 @@ class DocBlockAnnotationTest extends TestCase
      */
     public function testDataBagAnnotation()
     {
-        [$bExcluded, $aProperties, ] = $this->xAnnotationReader->getAttributes(DocBlockAnnotated::class, ['withBags']);
+        $aAttributes = $this->xAnnotationReader->getAttributes(DocBlockAnnotated::class, ['withBags']);
+        $bExcluded = $aAttributes[0];
+        $aProperties = $aAttributes[1];
 
         $this->assertFalse($bExcluded);
 
@@ -105,8 +110,10 @@ class DocBlockAnnotationTest extends TestCase
      */
     public function testCallbacksAnnotation()
     {
-        [$bExcluded, $aProperties, ] = $this->xAnnotationReader->getAttributes(DocBlockAnnotated::class,
+        $aAttributes = $this->xAnnotationReader->getAttributes(DocBlockAnnotated::class,
             ['cbSingle', 'cbMultiple', 'cbParams']);
+        $bExcluded = $aAttributes[0];
+        $aProperties = $aAttributes[1];
 
         $this->assertFalse($bExcluded);
 
@@ -149,7 +156,9 @@ class DocBlockAnnotationTest extends TestCase
      */
     public function testContainerAnnotation()
     {
-        [$bExcluded, $aProperties, ] = $this->xAnnotationReader->getAttributes(DocBlockAnnotated::class, ['di1', 'di2']);
+        $aAttributes = $this->xAnnotationReader->getAttributes(DocBlockAnnotated::class, ['di1', 'di2']);
+        $bExcluded = $aAttributes[0];
+        $aProperties = $aAttributes[1];
 
         $this->assertFalse($bExcluded);
 
@@ -169,8 +178,10 @@ class DocBlockAnnotationTest extends TestCase
      */
     public function testClassAnnotation()
     {
-        [$bExcluded, $aProperties,] = $this->xAnnotationReader->getAttributes(DocBlockClassAnnotated::class, []);
+        $aAttributes = $this->xAnnotationReader->getAttributes(DocBlockClassAnnotated::class, []);
         // $this->assertEquals('', json_encode($aProperties));
+        $bExcluded = $aAttributes[0];
+        $aProperties = $aAttributes[1];
 
         $this->assertFalse($bExcluded);
 
@@ -213,8 +224,11 @@ class DocBlockAnnotationTest extends TestCase
      */
     public function testClassExcludeAnnotation()
     {
-        [$bExcluded, $aProperties, $aProtected] = $this->xAnnotationReader->getAttributes(DocBlockClassExcluded::class,
+        $aAttributes = $this->xAnnotationReader->getAttributes(DocBlockClassExcluded::class,
             ['doNot', 'withBags', 'cbSingle']);
+        $bExcluded = $aAttributes[0];
+        $aProperties = $aAttributes[1];
+        $aProtected = $aAttributes[2];
 
         $this->assertTrue($bExcluded);
         $this->assertEmpty($aProperties);

@@ -13,6 +13,11 @@ use function Jaxon\Annotations\registerAnnotations;
 class TraitAnnotationTest extends TestCase
 {
     /**
+     * @var string
+     */
+    protected $sCacheDir;
+
+    /**
      * @var AnnotationReader
      */
     protected $xAnnotationReader;
@@ -58,7 +63,9 @@ class TraitAnnotationTest extends TestCase
      */
     public function testTraitAnnotation()
     {
-        [$bExcluded, $aProperties,] = $this->xAnnotationReader->getAttributes(TraitAnnotated::class, []);
+        $aAttributes = $this->xAnnotationReader->getAttributes(TraitAnnotated::class, []);
+        $bExcluded = $aAttributes[0];
+        $aProperties = $aAttributes[1];
 
         $this->assertFalse($bExcluded);
 
