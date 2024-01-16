@@ -40,7 +40,7 @@ class UploadAnnotation extends AbstractAnnotation
      */
     public static function parseAnnotation($value)
     {
-        $aParams = preg_split("/[\s]+/", $value, 2);
+        $aParams = preg_split('/[\s]+/', $value, 2);
         return count($aParams) === 1 ? ['field' => $aParams[0]] : ['field' => $aParams[0], 'extra' => $aParams[1]];
     }
 

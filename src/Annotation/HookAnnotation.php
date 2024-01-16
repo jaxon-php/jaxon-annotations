@@ -1,9 +1,9 @@
 <?php
 
 /**
- * AfterAnnotation.php
+ * HookAnnotation.php
  *
- * Jaxon annotation for callbacks.
+ * Common base class for before and after annotations.
  *
  * @package jaxon-annotations
  * @author Thierry Feuzeu <thierry.feuzeu@gmail.com>
@@ -26,7 +26,7 @@ use function preg_match;
 use function preg_split;
 use function rtrim;
 
-abstract class CallbackAnnotation extends AbstractAnnotation
+abstract class HookAnnotation extends AbstractAnnotation
 {
     /**
      * @var string
@@ -56,7 +56,7 @@ abstract class CallbackAnnotation extends AbstractAnnotation
      */
     public static function parseAnnotation($value)
     {
-        $aParams = preg_split("/[\s]+/", $value, 2);
+        $aParams = preg_split('/[\s]+/', $value, 2);
         if(count($aParams) === 1)
         {
             return ['call' => rtrim($aParams[0])];

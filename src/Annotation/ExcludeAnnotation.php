@@ -27,8 +27,6 @@ use function is_bool;
 class ExcludeAnnotation extends AbstractAnnotation
 {
     /**
-     * The name of the upload field
-     *
      * @var bool
      */
     protected $bValue;

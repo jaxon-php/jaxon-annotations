@@ -3,7 +3,7 @@
 /**
  * AfterAnnotation.php
  *
- * Jaxon annotation for callbacks.
+ * Jaxon annotation for server side callbacks.
  *
  * @package jaxon-annotations
  * @author Thierry Feuzeu <thierry.feuzeu@gmail.com>
@@ -19,7 +19,7 @@ namespace Jaxon\Annotations\Annotation;
  *
  * @usage('class' => true, 'method'=>true, 'multiple'=>true, 'inherited'=>true)
  */
-class AfterAnnotation extends CallbackAnnotation
+class AfterAnnotation extends HookAnnotation
 {
     /**
      * @inheritDoc

@@ -144,7 +144,7 @@ class ContainerAnnotation extends AbstractAnnotation implements IAnnotationFileA
     private function parseValue()
     {
         $value = $this->properties['__value__'];
-        $aParams = preg_split("/[\s]+/", $value, 3);
+        $aParams = preg_split('/[\s]+/', $value, 3);
         $nParamCount = count($aParams);
         if($nParamCount === 1)
         {
