@@ -91,7 +91,7 @@ class ContainerAnnotation extends AbstractAnnotation implements IAnnotationFileA
     public static function parseAnnotation($value)
     {
         // We need to know which type of class member the annotation is attached to (attribute,
-        // method or class), which is possible only when calling the initAnnotation() method.
+        // method or class), which is possible only when calling the getValue() method.
         // So we just return raw data in a custom format here.
         return ['__value__' => $value];
     }
@@ -102,7 +102,7 @@ class ContainerAnnotation extends AbstractAnnotation implements IAnnotationFileA
     public function initAnnotation(array $properties)
     {
         // We need to know which type of class member the annotation is attached to (attribute,
-        // method or class), which is possible only when calling the initAnnotation() method.
+        // method or class), which is possible only when calling the getValue() method.
         // So we just save the properties locally here.
         $this->properties = $properties;
     }
@@ -149,7 +149,7 @@ class ContainerAnnotation extends AbstractAnnotation implements IAnnotationFileA
         if($nParamCount === 1)
         {
             // For a property, the only parameter is the class. Otherwise, it is the attribute.
-            if($this->xReader->getMemberType() === AnnotationManager::MEMBER_PROPERTY)
+            if($this->xReader->annotationIsOnProperty())
             {
                 if(substr($aParams[0], 0, 1) === '$')
                 {
@@ -168,7 +168,7 @@ class ContainerAnnotation extends AbstractAnnotation implements IAnnotationFileA
         if($nParamCount === 2)
         {
             // For a property, having 2 parameters is not allowed.
-            if($this->xReader->getMemberType() === AnnotationManager::MEMBER_PROPERTY)
+            if($this->xReader->annotationIsOnProperty())
             {
                 throw new AnnotationException('The @di annotation accepts only one property on a class attribute');
             }
@@ -190,22 +190,38 @@ class ContainerAnnotation extends AbstractAnnotation implements IAnnotationFileA
     }
 
     /**
+     * @return bool
+     */
+    private function checkPropertiesNames(): bool
+    {
+        $nCount = count($this->properties);
+        switch($nCount)
+        {
+        case 0:
+            return true;
+        case 1:
+            return isset($this->properties['attr']) || isset($this->properties['class']);
+        case 2:
+            return isset($this->properties['attr']) && isset($this->properties['class']);
+        default:
+            return false;
+        }
+    }
+
+    /**
      * @return void
      * @throws AnnotationException
      */
     private function parseProperties()
     {
-        $nCount = count($this->properties);
-        if($nCount > 2 ||
-            ($nCount === 2 && !(isset($this->properties['attr']) && isset($this->properties['class']))) ||
-            ($nCount === 1 && !(isset($this->properties['attr']) || isset($this->properties['class']))))
+        if(!$this->checkPropertiesNames())
         {
             throw new AnnotationException('The @di annotation accepts only "attr" or "class" as properties');
         }
 
         if(isset($this->properties['attr']))
         {
-            if($this->xReader->getMemberType() === AnnotationManager::MEMBER_PROPERTY)
+            if($this->xReader->annotationIsOnProperty())
             {
                 throw new AnnotationException('The @di annotation does not allow the "attr" property on class attributes');
             }
@@ -240,6 +256,10 @@ class ContainerAnnotation extends AbstractAnnotation implements IAnnotationFileA
             $this->sClass = ltrim($aPropTypes[$this->sAttr], '\\');
         }
 
+        if($this->xReader->annotationIsOnProperty() && $this->xPrevValue !== null)
+        {
+            throw new AnnotationException('Only one @di annotation is allowed on a property');
+        }
         if(!$this->validateAttrName($this->sAttr))
         {
             throw new AnnotationException($this->sAttr . ' is not a valid "attr" value for the @di annotation');

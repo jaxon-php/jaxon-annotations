@@ -21,10 +21,8 @@ use Jaxon\Annotations\Annotation\DataBagAnnotation;
 use Jaxon\Annotations\Annotation\ExcludeAnnotation;
 use Jaxon\Annotations\Annotation\UploadAnnotation;
 use Jaxon\Annotations\Annotation\ContainerAnnotation;
-use Jaxon\Di\Container;
 use Jaxon\Exception\SetupException;
 use Jaxon\Plugin\AnnotationReaderInterface;
-use mindplay\annotations\AnnotationCache;
 use mindplay\annotations\AnnotationException;
 use mindplay\annotations\AnnotationManager;
 use mindplay\annotations\standard\VarAnnotation;
@@ -33,7 +31,6 @@ use function array_filter;
 use function array_merge;
 use function count;
 use function is_a;
-use function sys_get_temp_dir;
 
 class AnnotationReader implements AnnotationReaderInterface
 {
@@ -54,7 +51,7 @@ class AnnotationReader implements AnnotationReaderInterface
      *
      * @var string
      */
-    protected $sMemberType;
+    protected $sCurrMemberType;
 
     /**
      * The constructor
@@ -85,20 +82,20 @@ class AnnotationReader implements AnnotationReaderInterface
     }
 
     /**
-     * @return string
+     * @return bool
      */
-    public function getMemberType(): string
+    public function annotationIsOnProperty(): bool
     {
-        return $this->sMemberType;
+        return $this->sCurrMemberType === AnnotationManager::MEMBER_PROPERTY;
     }
 
     /**
      * @param array $aAnnotations
      *
-     * @return AbstractAnnotation[]
+     * @return array<array>
      * @throws AnnotationException
      */
-    private function filterAnnotations(array $aAnnotations): array
+    private function getMembersAttrs(array $aAnnotations): array
     {
         // Only keep the annotations declared in this package.
         $aAnnotations = array_filter($aAnnotations, function($xAnnotation) {
@@ -112,23 +109,50 @@ class AnnotationReader implements AnnotationReaderInterface
             $sName = $xAnnotation->getName();
             $xAnnotation->setPrevValue($aAttributes[$sName] ?? null);
             $xValue = $xAnnotation->getValue();
-            if($sName !== 'protected' || ($xValue)) // Ignore annotation @exclude with value false
+            if($sName === 'protected' && !$xValue)
             {
-                $aAttributes[$sName] = $xValue;
+                // Ignore annotation @exclude with value false
+                continue;
             }
+            $aAttributes[$sName] = $xValue;
         }
         return $aAttributes;
     }
 
     /**
-     * @param string $sProperty
-     * @param array $aAnnotations
+     * @param string $sClass
      *
-     * @return array
+     * @return array<array>
      * @throws AnnotationException
      */
-    private function propAnnotations(string $sProperty, array $aAnnotations): array
+    private function getClassAttrs(string $sClass): array
     {
+        return $this->getMembersAttrs($this->xManager->getClassAnnotations($sClass));
+    }
+
+    /**
+     * @param string $sClass
+     * @param string $sMethod
+     *
+     * @return array<array>
+     * @throws AnnotationException
+     */
+    private function getMethodAttrs(string $sClass, string $sMethod): array
+    {
+        return  $this->getMembersAttrs($this->xManager->getMethodAnnotations($sClass, $sMethod));
+    }
+
+    /**
+     * @param string $sClass
+     * @param string $sProperty
+     *
+     * @return array<array>
+     * @throws AnnotationException
+     */
+    private function getPropertyAttrs(string $sClass, string $sProperty): array
+    {
+        /** @var array<ContainerAnnotation> */
+        $aAnnotations = $this->xManager->getPropertyAnnotations($sClass, $sProperty);
         // Only keep the annotations declared in this package.
         $aAnnotations = array_filter($aAnnotations, function($xAnnotation) use($sProperty) {
             // Save the property type
@@ -140,20 +164,16 @@ class AnnotationReader implements AnnotationReaderInterface
             return is_a($xAnnotation, ContainerAnnotation::class);
         });
 
-        $nCount = count($aAnnotations);
-        if($nCount === 0)
+        $aAttributes = [];
+        foreach($aAnnotations as $xAnnotation)
         {
-            return ['', null];
+            $xAnnotation->setReader($this);
+            $xAnnotation->setAttr($sProperty);
+            $sName = $xAnnotation->getName();
+            $xAnnotation->setPrevValue($aAttributes[$sName] ?? null);
+            $aAttributes[$sName] = $xAnnotation->getValue();
         }
-        if($nCount > 1)
-        {
-            throw new AnnotationException('Only one @di annotation is allowed on a property');
-        }
-
-        $xAnnotation = $aAnnotations[0];
-        $xAnnotation->setReader($this);
-        $xAnnotation->setAttr($sProperty);
-        return [$xAnnotation->getName(), $xAnnotation->getValue()];
+        return $aAttributes;
     }
 
     /**
@@ -171,24 +191,24 @@ class AnnotationReader implements AnnotationReaderInterface
         try
         {
             // Processing properties annotations
-            $this->sMemberType = AnnotationManager::MEMBER_PROPERTY;
+            $this->sCurrMemberType = AnnotationManager::MEMBER_PROPERTY;
 
             $this->aPropTypes = [];
             $aPropAttrs = [];
             // Properties annotations
             foreach($aProperties as $sProperty)
             {
-                [$sName, $xValue] = $this->propAnnotations($sProperty, $this->xManager->getPropertyAnnotations($sClass, $sProperty));
-                if($xValue !== null)
+                $aPropertyAttrs = $this->getPropertyAttrs($sClass, $sProperty);
+                foreach($aPropertyAttrs as $sName => $xValue)
                 {
                     $aPropAttrs[$sName] = array_merge($aPropAttrs[$sName] ?? [], $xValue);
                 }
             }
 
             // Processing class annotations
-            $this->sMemberType = AnnotationManager::MEMBER_CLASS;
+            $this->sCurrMemberType = AnnotationManager::MEMBER_CLASS;
 
-            $aClassAttrs = $this->filterAnnotations($this->xManager->getClassAnnotations($sClass));
+            $aClassAttrs = $this->getClassAttrs($sClass);
             if(isset($aClassAttrs['protected']))
             {
                 return [true, [], []]; // The entire class is not to be exported.
@@ -201,13 +221,13 @@ class AnnotationReader implements AnnotationReaderInterface
             }
 
             // Processing methods annotations
-            $this->sMemberType = AnnotationManager::MEMBER_METHOD;
+            $this->sCurrMemberType = AnnotationManager::MEMBER_METHOD;
 
             $aAttributes = count($aClassAttrs) > 0 ? ['*' => $aClassAttrs] : [];
             $aProtected = [];
             foreach($aMethods as $sMethod)
             {
-                $aMethodAttrs = $this->filterAnnotations($this->xManager->getMethodAnnotations($sClass, $sMethod));
+                $aMethodAttrs = $this->getMethodAttrs($sClass, $sMethod);
                 if(isset($aMethodAttrs['protected']))
                 {
                     $aProtected[] = $sMethod; // The method is not to be exported.
