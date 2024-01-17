@@ -17,6 +17,7 @@ use Jaxon\Annotations\Tests\Service\TextService;
  * @di('attr' => 'colorService', 'class' => '\Jaxon\Annotations\Tests\Service\ColorService')
  * @di('attr' => 'textService', 'class' => 'TextService')
  * @di('attr' => 'fontService', 'class' => 'FontService')
+ * @callback('name' => 'jaxon.callback.global')
  */
 class ClassAnnotated extends CallableClass
 {

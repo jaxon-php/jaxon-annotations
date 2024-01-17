@@ -233,6 +233,52 @@ class JaxonExample
 }
 ```
 
+### @callback
+
+It defines a javascript object to be used as callback when processing the ajax request.
+
+It was added in version 2.2.0.
+
+```php
+/**
+ * Default callback for all the requests to the class.
+ *
+ * @callback('name' => 'jaxon.ajax.callback.example')
+ */
+class JaxonExample
+{
+    /**
+     * Specific callback for this method. It replaces the default class callback.
+     *
+     * @callback('name' => 'jaxon.ajax.callback.action')
+     */
+    public function action()
+    {
+    }
+}
+```
+
+The PHP-DOC syntax can also be used.
+
+```php
+/**
+ * Default callback for all the requests to the class.
+ *
+ * @callback jaxon.ajax.callback.example
+ */
+class JaxonExample
+{
+    /**
+     * Specific callback for this method. It replaces the default class callback.
+     *
+     * @callback jaxon.ajax.callback.action
+     */
+    public function action()
+    {
+    }
+}
+```
+
 ### @databag
 
 It defines a data bag to be appended to ajax requests to a method.

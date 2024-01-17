@@ -17,6 +17,7 @@ use Jaxon\Annotations\Tests\Service\TextService;
  * @di $colorService \Jaxon\Annotations\Tests\Service\ColorService
  * @di $textService TextService
  * @di $fontService FontService
+ * @callback jaxon.ajax.callback.test
  */
 class DocBlockClassAnnotated extends CallableClass
 {

@@ -109,7 +109,7 @@ class AnnotationTest extends TestCase
     /**
      * @throws SetupException
      */
-    public function testCallbacksAnnotation()
+    public function testServerCallbacksAnnotation()
     {
         $aAttributes = $this->xAnnotationReader->getAttributes(Annotated::class,
             ['cbSingle', 'cbMultiple', 'cbParams']);
@@ -187,20 +187,59 @@ class AnnotationTest extends TestCase
 
         $this->assertCount(1, $aProperties);
         $this->assertArrayHasKey('*', $aProperties);
-        $this->assertCount(4, $aProperties['*']);
+        $this->assertCount(5, $aProperties['*']);
         $this->assertArrayHasKey('bags', $aProperties['*']);
+        $this->assertArrayHasKey('callback', $aProperties['*']);
         $this->assertArrayHasKey('__before', $aProperties['*']);
         $this->assertArrayHasKey('__after', $aProperties['*']);
+    }
+
+    /**
+     * @throws SetupException
+     */
+    public function testClassBagsAnnotation()
+    {
+        $aAttributes = $this->xAnnotationReader->getAttributes(ClassAnnotated::class, []);
+        $aProperties = $aAttributes[1];
 
         $this->assertCount(2, $aProperties['*']['bags']);
         $this->assertEquals('user.name', $aProperties['*']['bags'][0]);
         $this->assertEquals('page.number', $aProperties['*']['bags'][1]);
+    }
+
+    /**
+     * @throws SetupException
+     */
+    public function testClassCallbackAnnotation()
+    {
+        $aAttributes = $this->xAnnotationReader->getAttributes(ClassAnnotated::class, []);
+        $aProperties = $aAttributes[1];
+
+        $this->assertEquals('jaxon.callback.global', $aProperties['*']['callback']);
+    }
+
+    /**
+     * @throws SetupException
+     */
+    public function testClassBeforeAnnotation()
+    {
+        $aAttributes = $this->xAnnotationReader->getAttributes(ClassAnnotated::class, []);
+        $aProperties = $aAttributes[1];
 
         $this->assertCount(2, $aProperties['*']['__before']);
         $this->assertArrayHasKey('funcBefore1', $aProperties['*']['__before']);
         $this->assertArrayHasKey('funcBefore2', $aProperties['*']['__before']);
         $this->assertIsArray($aProperties['*']['__before']['funcBefore1']);
         $this->assertIsArray($aProperties['*']['__before']['funcBefore2']);
+    }
+
+    /**
+     * @throws SetupException
+     */
+    public function testClassAfterAnnotation()
+    {
+        $aAttributes = $this->xAnnotationReader->getAttributes(ClassAnnotated::class, []);
+        $aProperties = $aAttributes[1];
 
         $this->assertCount(3, $aProperties['*']['__after']);
         $this->assertArrayHasKey('funcAfter1', $aProperties['*']['__after']);
@@ -209,6 +248,15 @@ class AnnotationTest extends TestCase
         $this->assertIsArray($aProperties['*']['__after']['funcAfter1']);
         $this->assertIsArray($aProperties['*']['__after']['funcAfter2']);
         $this->assertIsArray($aProperties['*']['__after']['funcAfter3']);
+    }
+
+    /**
+     * @throws SetupException
+     */
+    public function testClassDiAnnotation()
+    {
+        $aAttributes = $this->xAnnotationReader->getAttributes(ClassAnnotated::class, []);
+        $aProperties = $aAttributes[1];
 
         $this->assertCount(3, $aProperties['*']['__di']);
         $this->assertArrayHasKey('colorService', $aProperties['*']['__di']);

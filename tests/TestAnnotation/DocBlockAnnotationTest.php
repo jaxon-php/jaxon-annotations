@@ -108,7 +108,24 @@ class DocBlockAnnotationTest extends TestCase
     /**
      * @throws SetupException
      */
-    public function testCallbacksAnnotation()
+    public function testCallbackAnnotation()
+    {
+        $aAttributes = $this->xAnnotationReader->getAttributes(DocBlockAnnotated::class, ['withCallback']);
+        $bExcluded = $aAttributes[0];
+        $aProperties = $aAttributes[1];
+
+        $this->assertFalse($bExcluded);
+
+        $this->assertCount(1, $aProperties);
+        $this->assertArrayHasKey('withCallback', $aProperties);
+        $this->assertCount(1, $aProperties['withCallback']);
+        $this->assertEquals('jaxon.ajax.callback.test', $aProperties['withCallback']['callback']);
+    }
+
+    /**
+     * @throws SetupException
+     */
+    public function testHooksAnnotation()
     {
         $aAttributes = $this->xAnnotationReader->getAttributes(DocBlockAnnotated::class,
             ['cbSingle', 'cbMultiple', 'cbParams']);
@@ -187,14 +204,17 @@ class DocBlockAnnotationTest extends TestCase
 
         $this->assertCount(1, $aProperties);
         $this->assertArrayHasKey('*', $aProperties);
-        $this->assertCount(4, $aProperties['*']);
+        $this->assertCount(5, $aProperties['*']);
         $this->assertArrayHasKey('bags', $aProperties['*']);
+        $this->assertArrayHasKey('callback', $aProperties['*']);
         $this->assertArrayHasKey('__before', $aProperties['*']);
         $this->assertArrayHasKey('__after', $aProperties['*']);
 
         $this->assertCount(2, $aProperties['*']['bags']);
         $this->assertEquals('user.name', $aProperties['*']['bags'][0]);
         $this->assertEquals('page.number', $aProperties['*']['bags'][1]);
+
+        $this->assertEquals('jaxon.ajax.callback.test', $aProperties['*']['callback']);
 
         $this->assertCount(2, $aProperties['*']['__before']);
         $this->assertArrayHasKey('funcBefore1', $aProperties['*']['__before']);
