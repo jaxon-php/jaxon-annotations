@@ -4,8 +4,10 @@ namespace Jaxon\Annotations\Tests\TestAnnotation;
 
 use Jaxon\Annotations\AnnotationReader;
 use Jaxon\Annotations\Tests\App\Ajax\Annotated;
+use Jaxon\Annotations\Tests\App\Ajax\CallbackError;
 use Jaxon\Annotations\Tests\App\Ajax\ClassAnnotated;
 use Jaxon\Annotations\Tests\App\Ajax\ClassExcluded;
+use Jaxon\Annotations\Tests\App\Ajax\ContainerError;
 use Jaxon\Exception\SetupException;
 use PHPUnit\Framework\TestCase;
 
@@ -359,5 +361,47 @@ class AnnotationTest extends TestCase
     {
         $this->expectException(SetupException::class);
         $this->xAnnotationReader->getAttributes(Annotated::class, ['diWrongClassType']);
+    }
+
+    public function testContainerAnnotationWrongVarCount()
+    {
+        $this->expectException(SetupException::class);
+        $this->xAnnotationReader->getAttributes(Annotated::class, ['diWrongVarCount']);
+    }
+
+    public function testContainerErrorTwiceOnProp()
+    {
+        $this->expectException(SetupException::class);
+        $this->xAnnotationReader->getAttributes(ContainerError::class, [], ['prop']);
+    }
+
+    public function testCallbackErrorNoName()
+    {
+        $this->expectException(SetupException::class);
+        $this->xAnnotationReader->getAttributes(CallbackError::class, ['noName']);
+    }
+
+    public function testCallbackErrorWrongNameType()
+    {
+        $this->expectException(SetupException::class);
+        $this->xAnnotationReader->getAttributes(CallbackError::class, ['wrongNameType']);
+    }
+
+    public function testCallbackErrorWrongNameAttr()
+    {
+        $this->expectException(SetupException::class);
+        $this->xAnnotationReader->getAttributes(CallbackError::class, ['wrongNameAttr']);
+    }
+
+    public function testCallbackErrorNameWithSpace()
+    {
+        $this->expectException(SetupException::class);
+        $this->xAnnotationReader->getAttributes(CallbackError::class, ['nameWithSpace']);
+    }
+
+    public function testCallbackErrorStartWithInt()
+    {
+        $this->expectException(SetupException::class);
+        $this->xAnnotationReader->getAttributes(CallbackError::class, ['startWithInt']);
     }
 }

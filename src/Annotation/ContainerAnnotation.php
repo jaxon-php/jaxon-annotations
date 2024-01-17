@@ -16,7 +16,6 @@ namespace Jaxon\Annotations\Annotation;
 
 use mindplay\annotations\AnnotationException;
 use mindplay\annotations\AnnotationFile;
-use mindplay\annotations\AnnotationManager;
 use mindplay\annotations\IAnnotationFileAware;
 
 use function count;

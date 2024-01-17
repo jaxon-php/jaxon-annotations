@@ -62,7 +62,7 @@ class CallbackAnnotation extends AbstractAnnotation
      */
     public function initAnnotation(array $properties)
     {
-        if(count($properties) !== 1 || !is_string($properties['name']))
+        if(count($properties) !== 1 || !isset($properties['name']) || !is_string($properties['name']))
         {
             throw new AnnotationException('the @callback annotation requires a single string as property');
         }

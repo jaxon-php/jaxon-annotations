@@ -172,4 +172,11 @@ class Annotated extends CallableClass
     public function diWrongClassType()
     {
     }
+
+    /**
+     * @di('attr' => 'attr', 'class' => 'ClassName', 'name' => 'di')
+     */
+    public function diWrongVarCount()
+    {
+    }
 }
