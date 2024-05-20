@@ -2,6 +2,7 @@
 
 namespace Jaxon\Annotations;
 
+use Jaxon\App\Ajax;
 use Jaxon\App\Config\ConfigEventManager;
 use Jaxon\App\Config\ConfigListenerInterface;
 use Jaxon\Di\Container;
@@ -9,8 +10,6 @@ use Jaxon\Plugin\AnnotationReaderInterface;
 use Jaxon\Utils\Config\Config;
 use mindplay\annotations\AnnotationCache;
 use mindplay\annotations\AnnotationManager;
-
-use function Jaxon\jaxon;
 
 /**
  * Register the annotation reader into the Jaxon DI container
@@ -47,7 +46,7 @@ function register(Container $di, bool $bForce = false)
  */
 function registerAnnotations()
 {
-    $di = jaxon()->di();
+    $di = Ajax::getInstance()->di();
     $sEventListenerKey = AnnotationReader::class . '\\ConfigListener';
     if($di->h($sEventListenerKey))
     {
@@ -64,7 +63,7 @@ function registerAnnotations()
                 $sConfigKey = 'core.annotations.enabled';
                 if(($sName === $sConfigKey || $sName === '') && $xConfig->getOption($sConfigKey))
                 {
-                    register(jaxon()->di());
+                    register(Ajax::getInstance()->di());
                 }
             }
         };
