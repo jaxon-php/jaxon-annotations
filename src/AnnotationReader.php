@@ -27,6 +27,7 @@ use Jaxon\Plugin\AnnotationReaderInterface;
 use mindplay\annotations\AnnotationException;
 use mindplay\annotations\AnnotationManager;
 use mindplay\annotations\standard\VarAnnotation;
+use ReflectionClass;
 
 use function array_filter;
 use function array_merge;
@@ -181,21 +182,23 @@ class AnnotationReader implements AnnotationReaderInterface
     /**
      * Get the class attributes from its annotations
      *
-     * @param string $sClass
+     * @param ReflectionClass $xReflectionClass
      * @param array $aMethods
      * @param array $aProperties
      *
      * @return array
      * @throws SetupException
      */
-    public function getAttributes(string $sClass, array $aMethods = [], array $aProperties = []): array
+    public function getAttributes(ReflectionClass $xReflectionClass,
+        array $aMethods = [], array $aProperties = []): array
     {
+        $this->aPropTypes = [];
+        $sClass = $xReflectionClass->getName();
         try
         {
             // Processing properties annotations
             $this->sCurrMemberType = AnnotationManager::MEMBER_PROPERTY;
 
-            $this->aPropTypes = [];
             $aPropAttrs = [];
             // Properties annotations
             foreach($aProperties as $sProperty)

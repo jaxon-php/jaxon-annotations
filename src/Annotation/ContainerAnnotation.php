@@ -133,7 +133,7 @@ class ContainerAnnotation extends AbstractAnnotation implements IAnnotationFileA
      */
     private function getFullClassName(string $sClassName): string
     {
-        return ltrim($this->xClassFile->resolveType($sClassName), '\\');;
+        return ltrim($this->xClassFile->resolveType($sClassName), '\\');
     }
 
     /**

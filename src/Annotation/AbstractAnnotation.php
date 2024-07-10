@@ -32,6 +32,8 @@ abstract class AbstractAnnotation extends Annotation implements IAnnotationParse
 
     /**
      * @param AnnotationReader $xReader
+     *
+     * @return void
      */
     public function setReader(AnnotationReader $xReader): void
     {
