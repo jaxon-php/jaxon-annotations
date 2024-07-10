@@ -33,6 +33,7 @@ use function array_filter;
 use function array_merge;
 use function count;
 use function is_a;
+use function is_string;
 
 class AnnotationReader implements AnnotationReaderInterface
 {
@@ -182,18 +183,17 @@ class AnnotationReader implements AnnotationReaderInterface
     /**
      * Get the class attributes from its annotations
      *
-     * @param ReflectionClass $xReflectionClass
+     * @param ReflectionClass|string $xReflectionClass
      * @param array $aMethods
      * @param array $aProperties
      *
      * @return array
-     * @throws SetupException
      */
-    public function getAttributes(ReflectionClass $xReflectionClass,
+    public function getAttributes(ReflectionClass|string $xReflectionClass,
         array $aMethods = [], array $aProperties = []): array
     {
         $this->aPropTypes = [];
-        $sClass = $xReflectionClass->getName();
+        $sClass = is_string($xReflectionClass) ? $xReflectionClass : $xReflectionClass->getName();
         try
         {
             // Processing properties annotations
