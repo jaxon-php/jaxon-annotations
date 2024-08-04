@@ -23,7 +23,7 @@ use Jaxon\Annotations\Annotation\ExcludeAnnotation;
 use Jaxon\Annotations\Annotation\UploadAnnotation;
 use Jaxon\Annotations\Annotation\ContainerAnnotation;
 use Jaxon\Exception\SetupException;
-use Jaxon\Plugin\AnnotationReaderInterface;
+use Jaxon\Plugin\CallableMetadataInterface;
 use mindplay\annotations\AnnotationException;
 use mindplay\annotations\AnnotationManager;
 use mindplay\annotations\standard\VarAnnotation;
@@ -35,7 +35,7 @@ use function count;
 use function is_a;
 use function is_string;
 
-class AnnotationReader implements AnnotationReaderInterface
+class AnnotationReader implements CallableMetadataInterface
 {
     /**
      * @var AnnotationManager

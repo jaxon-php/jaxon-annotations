@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
 use function Jaxon\jaxon;
 use function mkdir;
 use function rmdir;
-use function Jaxon\Annotations\registerAnnotations;
+use function Jaxon\Annotations\registerAnnotationsReader;
 
 class DocBlockAnnotationTest extends TestCase
 {
@@ -35,11 +35,10 @@ class DocBlockAnnotationTest extends TestCase
         @mkdir($this->sCacheDir);
 
         jaxon()->di()->getPluginManager()->registerPlugins();
-        registerAnnotations();
-        jaxon()->setOption('core.annotations.enabled', true);
+        registerAnnotationsReader();
 
         jaxon()->di()->val('jaxon_annotations_cache_dir', $this->sCacheDir);
-        $this->xAnnotationReader = jaxon()->di()->g(AnnotationReader::class);
+        $this->xAnnotationReader = jaxon()->di()->getMetadataReader('annotations');
     }
 
     /**
@@ -67,9 +66,6 @@ class DocBlockAnnotationTest extends TestCase
      */
     public function testUploadAndExcludeAnnotation()
     {
-        // Can be called multiple times without error.
-        registerAnnotations();
-
         $aAttributes = $this->xAnnotationReader->getAttributes(DocBlockAnnotated::class, ['saveFiles', 'doNot']);
         $bExcluded = $aAttributes[0];
         $aProperties = $aAttributes[1];
