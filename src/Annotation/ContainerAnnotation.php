@@ -250,8 +250,13 @@ class ContainerAnnotation extends AbstractAnnotation implements IAnnotationFileA
 
         // The type in the @di annotations can be set from the values in the @var annotations
         $aPropTypes = $this->xReader->getPropTypes();
-        if($this->sClass === '' && isset($aPropTypes[$this->sAttr]))
+        if($this->sClass === '')
         {
+            if(!isset($aPropTypes[$this->sAttr]))
+            {
+                throw new AnnotationException('No class defined for @di on attribute "' .
+                    $this->sAttr . '".');
+            }
             $this->sClass = ltrim($aPropTypes[$this->sAttr], '\\');
         }
 
