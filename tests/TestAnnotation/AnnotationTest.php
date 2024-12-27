@@ -66,10 +66,10 @@ class AnnotationTest extends TestCase
      */
     public function testUploadAndExcludeAnnotation()
     {
-        $aAttributes = $this->xAnnotationReader->getAttributes(Annotated::class, ['saveFiles', 'doNot']);
-        $bExcluded = $aAttributes[0];
-        $aProperties = $aAttributes[1];
-        $aProtected = $aAttributes[2];
+        $xMetadata = $this->xAnnotationReader->getAttributes(Annotated::class, ['saveFiles', 'doNot']);
+        $bExcluded = $xMetadata->isExcluded();
+        $aProperties = $xMetadata->getProperties();
+        $aProtected = $xMetadata->getProtectedMethods();
 
         $this->assertFalse($bExcluded);
 
@@ -87,9 +87,9 @@ class AnnotationTest extends TestCase
      */
     public function testDataBagAnnotation()
     {
-        $aAttributes = $this->xAnnotationReader->getAttributes(Annotated::class, ['withBags']);
-        $bExcluded = $aAttributes[0];
-        $aProperties = $aAttributes[1];
+        $xMetadata = $this->xAnnotationReader->getAttributes(Annotated::class, ['withBags']);
+        $bExcluded = $xMetadata->isExcluded();
+        $aProperties = $xMetadata->getProperties();
 
         $this->assertFalse($bExcluded);
 
@@ -106,10 +106,10 @@ class AnnotationTest extends TestCase
      */
     public function testServerCallbacksAnnotation()
     {
-        $aAttributes = $this->xAnnotationReader->getAttributes(Annotated::class,
+        $xMetadata = $this->xAnnotationReader->getAttributes(Annotated::class,
             ['cbSingle', 'cbMultiple', 'cbParams']);
-        $bExcluded = $aAttributes[0];
-        $aProperties = $aAttributes[1];
+        $bExcluded = $xMetadata->isExcluded();
+        $aProperties = $xMetadata->getProperties();
 
         $this->assertFalse($bExcluded);
 
@@ -152,9 +152,9 @@ class AnnotationTest extends TestCase
      */
     public function testContainerAnnotation()
     {
-        $aAttributes = $this->xAnnotationReader->getAttributes(Annotated::class, ['di1', 'di2']);
-        $bExcluded = $aAttributes[0];
-        $aProperties = $aAttributes[1];
+        $xMetadata = $this->xAnnotationReader->getAttributes(Annotated::class, ['di1', 'di2']);
+        $bExcluded = $xMetadata->isExcluded();
+        $aProperties = $xMetadata->getProperties();
 
         $this->assertFalse($bExcluded);
 
@@ -174,9 +174,9 @@ class AnnotationTest extends TestCase
      */
     public function testClassAnnotation()
     {
-        $aAttributes = $this->xAnnotationReader->getAttributes(ClassAnnotated::class, []);
-        $bExcluded = $aAttributes[0];
-        $aProperties = $aAttributes[1];
+        $xMetadata = $this->xAnnotationReader->getAttributes(ClassAnnotated::class, []);
+        $bExcluded = $xMetadata->isExcluded();
+        $aProperties = $xMetadata->getProperties();
 
         $this->assertFalse($bExcluded);
 
@@ -194,8 +194,8 @@ class AnnotationTest extends TestCase
      */
     public function testClassBagsAnnotation()
     {
-        $aAttributes = $this->xAnnotationReader->getAttributes(ClassAnnotated::class, []);
-        $aProperties = $aAttributes[1];
+        $xMetadata = $this->xAnnotationReader->getAttributes(ClassAnnotated::class, []);
+        $aProperties = $xMetadata->getProperties();
 
         $this->assertCount(2, $aProperties['*']['bags']);
         $this->assertEquals('user.name', $aProperties['*']['bags'][0]);
@@ -207,8 +207,8 @@ class AnnotationTest extends TestCase
      */
     public function testClassCallbackAnnotation()
     {
-        $aAttributes = $this->xAnnotationReader->getAttributes(ClassAnnotated::class, []);
-        $aProperties = $aAttributes[1];
+        $xMetadata = $this->xAnnotationReader->getAttributes(ClassAnnotated::class, []);
+        $aProperties = $xMetadata->getProperties();
 
         $this->assertEquals('jaxon.callback.global', $aProperties['*']['callback']);
     }
@@ -218,8 +218,8 @@ class AnnotationTest extends TestCase
      */
     public function testClassBeforeAnnotation()
     {
-        $aAttributes = $this->xAnnotationReader->getAttributes(ClassAnnotated::class, []);
-        $aProperties = $aAttributes[1];
+        $xMetadata = $this->xAnnotationReader->getAttributes(ClassAnnotated::class, []);
+        $aProperties = $xMetadata->getProperties();
 
         $this->assertCount(2, $aProperties['*']['__before']);
         $this->assertArrayHasKey('funcBefore1', $aProperties['*']['__before']);
@@ -233,8 +233,8 @@ class AnnotationTest extends TestCase
      */
     public function testClassAfterAnnotation()
     {
-        $aAttributes = $this->xAnnotationReader->getAttributes(ClassAnnotated::class, []);
-        $aProperties = $aAttributes[1];
+        $xMetadata = $this->xAnnotationReader->getAttributes(ClassAnnotated::class, []);
+        $aProperties = $xMetadata->getProperties();
 
         $this->assertCount(3, $aProperties['*']['__after']);
         $this->assertArrayHasKey('funcAfter1', $aProperties['*']['__after']);
@@ -250,8 +250,8 @@ class AnnotationTest extends TestCase
      */
     public function testClassDiAnnotation()
     {
-        $aAttributes = $this->xAnnotationReader->getAttributes(ClassAnnotated::class, []);
-        $aProperties = $aAttributes[1];
+        $xMetadata = $this->xAnnotationReader->getAttributes(ClassAnnotated::class, []);
+        $aProperties = $xMetadata->getProperties();
 
         $this->assertCount(3, $aProperties['*']['__di']);
         $this->assertArrayHasKey('colorService', $aProperties['*']['__di']);
@@ -267,11 +267,11 @@ class AnnotationTest extends TestCase
      */
     public function testClassExcludeAnnotation()
     {
-        $aAttributes = $this->xAnnotationReader->getAttributes(ClassExcluded::class,
+        $xMetadata = $this->xAnnotationReader->getAttributes(ClassExcluded::class,
             ['doNot', 'withBags', 'cbSingle']);
-        $bExcluded = $aAttributes[0];
-        $aProperties = $aAttributes[1];
-        $aProtected = $aAttributes[2];
+        $bExcluded = $xMetadata->isExcluded();
+        $aProperties = $xMetadata->getProperties();
+        $aProtected = $xMetadata->getProtectedMethods();
 
         $this->assertTrue($bExcluded);
         $this->assertEmpty($aProperties);

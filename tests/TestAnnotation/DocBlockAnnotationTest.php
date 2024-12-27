@@ -66,10 +66,10 @@ class DocBlockAnnotationTest extends TestCase
      */
     public function testUploadAndExcludeAnnotation()
     {
-        $aAttributes = $this->xAnnotationReader->getAttributes(DocBlockAnnotated::class, ['saveFiles', 'doNot']);
-        $bExcluded = $aAttributes[0];
-        $aProperties = $aAttributes[1];
-        $aProtected = $aAttributes[2];
+        $xMetadata = $this->xAnnotationReader->getAttributes(DocBlockAnnotated::class, ['saveFiles', 'doNot']);
+        $bExcluded = $xMetadata->isExcluded();
+        $aProperties = $xMetadata->getProperties();
+        $aProtected = $xMetadata->getProtectedMethods();
 
         $this->assertFalse($bExcluded);
 
@@ -87,9 +87,9 @@ class DocBlockAnnotationTest extends TestCase
      */
     public function testDataBagAnnotation()
     {
-        $aAttributes = $this->xAnnotationReader->getAttributes(DocBlockAnnotated::class, ['withBags']);
-        $bExcluded = $aAttributes[0];
-        $aProperties = $aAttributes[1];
+        $xMetadata = $this->xAnnotationReader->getAttributes(DocBlockAnnotated::class, ['withBags']);
+        $bExcluded = $xMetadata->isExcluded();
+        $aProperties = $xMetadata->getProperties();
 
         $this->assertFalse($bExcluded);
 
@@ -106,9 +106,9 @@ class DocBlockAnnotationTest extends TestCase
      */
     public function testCallbackAnnotation()
     {
-        $aAttributes = $this->xAnnotationReader->getAttributes(DocBlockAnnotated::class, ['withCallback']);
-        $bExcluded = $aAttributes[0];
-        $aProperties = $aAttributes[1];
+        $xMetadata = $this->xAnnotationReader->getAttributes(DocBlockAnnotated::class, ['withCallback']);
+        $bExcluded = $xMetadata->isExcluded();
+        $aProperties = $xMetadata->getProperties();
 
         $this->assertFalse($bExcluded);
 
@@ -123,10 +123,10 @@ class DocBlockAnnotationTest extends TestCase
      */
     public function testHooksAnnotation()
     {
-        $aAttributes = $this->xAnnotationReader->getAttributes(DocBlockAnnotated::class,
+        $xMetadata = $this->xAnnotationReader->getAttributes(DocBlockAnnotated::class,
             ['cbSingle', 'cbMultiple', 'cbParams']);
-        $bExcluded = $aAttributes[0];
-        $aProperties = $aAttributes[1];
+        $bExcluded = $xMetadata->isExcluded();
+        $aProperties = $xMetadata->getProperties();
 
         $this->assertFalse($bExcluded);
 
@@ -169,9 +169,9 @@ class DocBlockAnnotationTest extends TestCase
      */
     public function testContainerAnnotation()
     {
-        $aAttributes = $this->xAnnotationReader->getAttributes(DocBlockAnnotated::class, ['di1', 'di2']);
-        $bExcluded = $aAttributes[0];
-        $aProperties = $aAttributes[1];
+        $xMetadata = $this->xAnnotationReader->getAttributes(DocBlockAnnotated::class, ['di1', 'di2']);
+        $bExcluded = $xMetadata->isExcluded();
+        $aProperties = $xMetadata->getProperties();
 
         $this->assertFalse($bExcluded);
 
@@ -191,10 +191,10 @@ class DocBlockAnnotationTest extends TestCase
      */
     public function testClassAnnotation()
     {
-        $aAttributes = $this->xAnnotationReader->getAttributes(DocBlockClassAnnotated::class, []);
+        $xMetadata = $this->xAnnotationReader->getAttributes(DocBlockClassAnnotated::class, []);
         // $this->assertEquals('', json_encode($aProperties));
-        $bExcluded = $aAttributes[0];
-        $aProperties = $aAttributes[1];
+        $bExcluded = $xMetadata->isExcluded();
+        $aProperties = $xMetadata->getProperties();
 
         $this->assertFalse($bExcluded);
 
@@ -240,11 +240,11 @@ class DocBlockAnnotationTest extends TestCase
      */
     public function testClassExcludeAnnotation()
     {
-        $aAttributes = $this->xAnnotationReader->getAttributes(DocBlockClassExcluded::class,
+        $xMetadata = $this->xAnnotationReader->getAttributes(DocBlockClassExcluded::class,
             ['doNot', 'withBags', 'cbSingle']);
-        $bExcluded = $aAttributes[0];
-        $aProperties = $aAttributes[1];
-        $aProtected = $aAttributes[2];
+        $bExcluded = $xMetadata->isExcluded();
+        $aProperties = $xMetadata->getProperties();
+        $aProtected = $xMetadata->getProtectedMethods();
 
         $this->assertTrue($bExcluded);
         $this->assertEmpty($aProperties);

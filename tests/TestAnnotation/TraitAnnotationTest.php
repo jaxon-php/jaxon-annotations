@@ -62,9 +62,9 @@ class TraitAnnotationTest extends TestCase
      */
     public function testTraitAnnotation()
     {
-        $aAttributes = $this->xAnnotationReader->getAttributes(TraitAnnotated::class, []);
-        $bExcluded = $aAttributes[0];
-        $aProperties = $aAttributes[1];
+        $xMetadata = $this->xAnnotationReader->getAttributes(TraitAnnotated::class, []);
+        $bExcluded = $xMetadata->isExcluded();
+        $aProperties = $xMetadata->getProperties();
 
         $this->assertFalse($bExcluded);
 

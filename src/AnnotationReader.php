@@ -14,6 +14,9 @@
 
 namespace Jaxon\Annotations;
 
+use Jaxon\App\Metadata\Metadata;
+use Jaxon\App\Metadata\MetadataInterface;
+use Jaxon\App\Metadata\MetadataReaderInterface;
 use Jaxon\Annotations\Annotation\AbstractAnnotation;
 use Jaxon\Annotations\Annotation\AfterAnnotation;
 use Jaxon\Annotations\Annotation\BeforeAnnotation;
@@ -23,7 +26,6 @@ use Jaxon\Annotations\Annotation\ExcludeAnnotation;
 use Jaxon\Annotations\Annotation\UploadAnnotation;
 use Jaxon\Annotations\Annotation\ContainerAnnotation;
 use Jaxon\Exception\SetupException;
-use Jaxon\Plugin\CallableMetadataInterface;
 use mindplay\annotations\AnnotationException;
 use mindplay\annotations\AnnotationManager;
 use mindplay\annotations\standard\VarAnnotation;
@@ -35,7 +37,7 @@ use function count;
 use function is_a;
 use function is_string;
 
-class AnnotationReader implements CallableMetadataInterface
+class AnnotationReader implements MetadataReaderInterface
 {
     /**
      * @var AnnotationManager
@@ -187,10 +189,10 @@ class AnnotationReader implements CallableMetadataInterface
      * @param array $aMethods
      * @param array $aProperties
      *
-     * @return array
+     * @return MetadataInterface|null
      */
     public function getAttributes(ReflectionClass|string $xReflectionClass,
-        array $aMethods = [], array $aProperties = []): array
+        array $aMethods = [], array $aProperties = []): ?MetadataInterface
     {
         $this->aPropTypes = [];
         $sClass = is_string($xReflectionClass) ? $xReflectionClass : $xReflectionClass->getName();
@@ -216,7 +218,8 @@ class AnnotationReader implements CallableMetadataInterface
             $aClassAttrs = $this->getClassAttrs($sClass);
             if(isset($aClassAttrs['protected']))
             {
-                return [true, [], []]; // The entire class is not to be exported.
+                // The entire class is not to be exported.
+                return new Metadata(true, [], []);
             }
 
             // Merge attributes and class annotations
@@ -242,7 +245,7 @@ class AnnotationReader implements CallableMetadataInterface
                     $aAttributes[$sMethod] = $aMethodAttrs;
                 }
             }
-            return [false, $aAttributes, $aProtected];
+            return new Metadata(false, $aAttributes, $aProtected);
         }
         catch(AnnotationException $e)
         {

@@ -62,10 +62,10 @@ class AttrAnnotationTest extends TestCase
      */
     public function testContainerAnnotation()
     {
-        $aAttributes = $this->xAnnotationReader->getAttributes(AttrAnnotated::class,
+        $xMetadata = $this->xAnnotationReader->getAttributes(AttrAnnotated::class,
             ['attrVar'], ['colorService', 'fontService', 'textService']);
-        $bExcluded = $aAttributes[0];
-        $aProperties = $aAttributes[1];
+        $bExcluded = $xMetadata->isExcluded();
+        $aProperties = $xMetadata->getProperties();
 
         $this->assertFalse($bExcluded);
 
@@ -82,10 +82,10 @@ class AttrAnnotationTest extends TestCase
      */
     public function testContainerDocBlockAnnotation()
     {
-        $aAttributes = $this->xAnnotationReader->getAttributes(AttrAnnotated::class,
+        $xMetadata = $this->xAnnotationReader->getAttributes(AttrAnnotated::class,
             ['attrDbVar'], ['colorService', 'fontService', 'textService']);
-        $bExcluded = $aAttributes[0];
-        $aProperties = $aAttributes[1];
+        $bExcluded = $xMetadata->isExcluded();
+        $aProperties = $xMetadata->getProperties();
 
         $this->assertFalse($bExcluded);
 
@@ -102,10 +102,10 @@ class AttrAnnotationTest extends TestCase
      */
     public function testContainerDiAnnotation()
     {
-        $aAttributes = $this->xAnnotationReader->getAttributes(AttrAnnotated::class,
+        $xMetadata = $this->xAnnotationReader->getAttributes(AttrAnnotated::class,
             ['attrDi'], ['colorService1', 'fontService1', 'textService1']);
-        $bExcluded = $aAttributes[0];
-        $aProperties = $aAttributes[1];
+        $bExcluded = $xMetadata->isExcluded();
+        $aProperties = $xMetadata->getProperties();
 
         $this->assertFalse($bExcluded);
 
@@ -122,10 +122,10 @@ class AttrAnnotationTest extends TestCase
      */
     public function testContainerDiAndVarAnnotation()
     {
-        $aAttributes = $this->xAnnotationReader->getAttributes(AttrAnnotated::class,
+        $xMetadata = $this->xAnnotationReader->getAttributes(AttrAnnotated::class,
             ['attrDi'], ['colorService2', 'fontService2', 'textService2']);
-        $bExcluded = $aAttributes[0];
-        $aProperties = $aAttributes[1];
+        $bExcluded = $xMetadata->isExcluded();
+        $aProperties = $xMetadata->getProperties();
 
         $this->assertFalse($bExcluded);
 
@@ -142,10 +142,10 @@ class AttrAnnotationTest extends TestCase
      */
     public function testContainerPropAnnotation()
     {
-        $aAttributes = $this->xAnnotationReader->getAttributes(AttrAnnotated::class,
+        $xMetadata = $this->xAnnotationReader->getAttributes(AttrAnnotated::class,
             ['attrDi'], ['colorService3', 'fontService3', 'textService3']);
-        $bExcluded = $aAttributes[0];
-        $aProperties = $aAttributes[1];
+        $bExcluded = $xMetadata->isExcluded();
+        $aProperties = $xMetadata->getProperties();
 
         $this->assertFalse($bExcluded);
 
