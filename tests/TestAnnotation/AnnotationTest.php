@@ -2,7 +2,7 @@
 
 namespace Jaxon\Annotations\Tests\TestAnnotation;
 
-use Jaxon\Annotations\AnnotationReader;
+use Jaxon\Annotations\Tests\AnnotationTrait;
 use Jaxon\Annotations\Tests\App\Ajax\Annotated;
 use Jaxon\Annotations\Tests\App\Ajax\CallbackError;
 use Jaxon\Annotations\Tests\App\Ajax\ClassAnnotated;
@@ -16,15 +16,12 @@ use function Jaxon\Annotations\registerAnnotationsReader;
 
 class AnnotationTest extends TestCase
 {
+    use AnnotationTrait;
+
     /**
      * @var string
      */
     protected $sCacheDir;
-
-    /**
-     * @var AnnotationReader
-     */
-    protected $xAnnotationReader;
 
     /**
      * @throws SetupException
@@ -38,7 +35,6 @@ class AnnotationTest extends TestCase
         registerAnnotationsReader();
 
         jaxon()->di()->val('jaxon_annotations_cache_dir', $this->sCacheDir);
-        $this->xAnnotationReader = jaxon()->di()->getMetadataReader('annotations');
     }
 
     /**
@@ -66,7 +62,7 @@ class AnnotationTest extends TestCase
      */
     public function testUploadAndExcludeAnnotation()
     {
-        $xMetadata = $this->xAnnotationReader->getAttributes(Annotated::class, ['saveFiles', 'doNot']);
+        $xMetadata = $this->getAttributes(Annotated::class, ['saveFiles', 'doNot']);
         $bExcluded = $xMetadata->isExcluded();
         $aProperties = $xMetadata->getProperties();
         $aProtected = $xMetadata->getProtectedMethods();
@@ -87,7 +83,7 @@ class AnnotationTest extends TestCase
      */
     public function testDataBagAnnotation()
     {
-        $xMetadata = $this->xAnnotationReader->getAttributes(Annotated::class, ['withBags']);
+        $xMetadata = $this->getAttributes(Annotated::class, ['withBags']);
         $bExcluded = $xMetadata->isExcluded();
         $aProperties = $xMetadata->getProperties();
 
@@ -106,7 +102,7 @@ class AnnotationTest extends TestCase
      */
     public function testServerCallbacksAnnotation()
     {
-        $xMetadata = $this->xAnnotationReader->getAttributes(Annotated::class,
+        $xMetadata = $this->getAttributes(Annotated::class,
             ['cbSingle', 'cbMultiple', 'cbParams']);
         $bExcluded = $xMetadata->isExcluded();
         $aProperties = $xMetadata->getProperties();
@@ -152,7 +148,7 @@ class AnnotationTest extends TestCase
      */
     public function testContainerAnnotation()
     {
-        $xMetadata = $this->xAnnotationReader->getAttributes(Annotated::class, ['di1', 'di2']);
+        $xMetadata = $this->getAttributes(Annotated::class, ['di1', 'di2']);
         $bExcluded = $xMetadata->isExcluded();
         $aProperties = $xMetadata->getProperties();
 
@@ -174,7 +170,7 @@ class AnnotationTest extends TestCase
      */
     public function testClassAnnotation()
     {
-        $xMetadata = $this->xAnnotationReader->getAttributes(ClassAnnotated::class, []);
+        $xMetadata = $this->getAttributes(ClassAnnotated::class, []);
         $bExcluded = $xMetadata->isExcluded();
         $aProperties = $xMetadata->getProperties();
 
@@ -194,7 +190,7 @@ class AnnotationTest extends TestCase
      */
     public function testClassBagsAnnotation()
     {
-        $xMetadata = $this->xAnnotationReader->getAttributes(ClassAnnotated::class, []);
+        $xMetadata = $this->getAttributes(ClassAnnotated::class, []);
         $aProperties = $xMetadata->getProperties();
 
         $this->assertCount(2, $aProperties['*']['bags']);
@@ -207,7 +203,7 @@ class AnnotationTest extends TestCase
      */
     public function testClassCallbackAnnotation()
     {
-        $xMetadata = $this->xAnnotationReader->getAttributes(ClassAnnotated::class, []);
+        $xMetadata = $this->getAttributes(ClassAnnotated::class, []);
         $aProperties = $xMetadata->getProperties();
 
         $this->assertEquals('jaxon.callback.global', $aProperties['*']['callback']);
@@ -218,7 +214,7 @@ class AnnotationTest extends TestCase
      */
     public function testClassBeforeAnnotation()
     {
-        $xMetadata = $this->xAnnotationReader->getAttributes(ClassAnnotated::class, []);
+        $xMetadata = $this->getAttributes(ClassAnnotated::class, []);
         $aProperties = $xMetadata->getProperties();
 
         $this->assertCount(2, $aProperties['*']['__before']);
@@ -233,7 +229,7 @@ class AnnotationTest extends TestCase
      */
     public function testClassAfterAnnotation()
     {
-        $xMetadata = $this->xAnnotationReader->getAttributes(ClassAnnotated::class, []);
+        $xMetadata = $this->getAttributes(ClassAnnotated::class, []);
         $aProperties = $xMetadata->getProperties();
 
         $this->assertCount(3, $aProperties['*']['__after']);
@@ -250,7 +246,7 @@ class AnnotationTest extends TestCase
      */
     public function testClassDiAnnotation()
     {
-        $xMetadata = $this->xAnnotationReader->getAttributes(ClassAnnotated::class, []);
+        $xMetadata = $this->getAttributes(ClassAnnotated::class, []);
         $aProperties = $xMetadata->getProperties();
 
         $this->assertCount(3, $aProperties['*']['__di']);
@@ -267,7 +263,7 @@ class AnnotationTest extends TestCase
      */
     public function testClassExcludeAnnotation()
     {
-        $xMetadata = $this->xAnnotationReader->getAttributes(ClassExcluded::class,
+        $xMetadata = $this->getAttributes(ClassExcluded::class,
             ['doNot', 'withBags', 'cbSingle']);
         $bExcluded = $xMetadata->isExcluded();
         $aProperties = $xMetadata->getProperties();
@@ -281,120 +277,120 @@ class AnnotationTest extends TestCase
     public function testExcludeAnnotationError()
     {
         $this->expectException(SetupException::class);
-        $this->xAnnotationReader->getAttributes(Annotated::class, ['doNotError']);
+        $this->getAttributes(Annotated::class, ['doNotError']);
     }
 
     public function testDataBagAnnotationError()
     {
         $this->expectException(SetupException::class);
-        $this->xAnnotationReader->getAttributes(Annotated::class, ['withBagsError']);
+        $this->getAttributes(Annotated::class, ['withBagsError']);
     }
 
     public function testUploadAnnotationWrongName()
     {
         $this->expectException(SetupException::class);
-        $this->xAnnotationReader->getAttributes(Annotated::class, ['saveFilesWrongName']);
+        $this->getAttributes(Annotated::class, ['saveFilesWrongName']);
     }
 
     public function testUploadAnnotationMultiple()
     {
         $this->expectException(SetupException::class);
-        $this->xAnnotationReader->getAttributes(Annotated::class, ['saveFilesMultiple']);
+        $this->getAttributes(Annotated::class, ['saveFilesMultiple']);
     }
 
     public function testCallbacksBeforeAnnotationNoCall()
     {
         $this->expectException(SetupException::class);
-        $this->xAnnotationReader->getAttributes(Annotated::class, ['cbBeforeNoCall']);
+        $this->getAttributes(Annotated::class, ['cbBeforeNoCall']);
     }
 
     public function testCallbacksBeforeAnnotationUnknownAttr()
     {
         $this->expectException(SetupException::class);
-        $this->xAnnotationReader->getAttributes(Annotated::class, ['cbBeforeUnknownAttr']);
+        $this->getAttributes(Annotated::class, ['cbBeforeUnknownAttr']);
     }
 
     public function testCallbacksBeforeAnnotationWrongAttrType()
     {
         $this->expectException(SetupException::class);
-        $this->xAnnotationReader->getAttributes(Annotated::class, ['cbBeforeWrongAttrType']);
+        $this->getAttributes(Annotated::class, ['cbBeforeWrongAttrType']);
     }
 
     public function testCallbacksAfterAnnotationNoCall()
     {
         $this->expectException(SetupException::class);
-        $this->xAnnotationReader->getAttributes(Annotated::class, ['cbAfterNoCall']);
+        $this->getAttributes(Annotated::class, ['cbAfterNoCall']);
     }
 
     public function testCallbacksAfterAnnotationUnknownAttr()
     {
         $this->expectException(SetupException::class);
-        $this->xAnnotationReader->getAttributes(Annotated::class, ['cbAfterUnknownAttr']);
+        $this->getAttributes(Annotated::class, ['cbAfterUnknownAttr']);
     }
 
     public function testCallbacksAfterAnnotationWrongAttrType()
     {
         $this->expectException(SetupException::class);
-        $this->xAnnotationReader->getAttributes(Annotated::class, ['cbAfterWrongAttrType']);
+        $this->getAttributes(Annotated::class, ['cbAfterWrongAttrType']);
     }
 
     public function testContainerAnnotationUnknownAttr()
     {
         $this->expectException(SetupException::class);
-        $this->xAnnotationReader->getAttributes(Annotated::class, ['diUnknownAttr']);
+        $this->getAttributes(Annotated::class, ['diUnknownAttr']);
     }
 
     public function testContainerAnnotationWrongAttrType()
     {
         $this->expectException(SetupException::class);
-        $this->xAnnotationReader->getAttributes(Annotated::class, ['diWrongAttrType']);
+        $this->getAttributes(Annotated::class, ['diWrongAttrType']);
     }
 
     public function testContainerAnnotationWrongClassType()
     {
         $this->expectException(SetupException::class);
-        $this->xAnnotationReader->getAttributes(Annotated::class, ['diWrongClassType']);
+        $this->getAttributes(Annotated::class, ['diWrongClassType']);
     }
 
     public function testContainerAnnotationWrongVarCount()
     {
         $this->expectException(SetupException::class);
-        $this->xAnnotationReader->getAttributes(Annotated::class, ['diWrongVarCount']);
+        $this->getAttributes(Annotated::class, ['diWrongVarCount']);
     }
 
     public function testContainerErrorTwiceOnProp()
     {
         $this->expectException(SetupException::class);
-        $this->xAnnotationReader->getAttributes(ContainerError::class, [], ['prop']);
+        $this->getAttributes(ContainerError::class, [], ['prop']);
     }
 
     public function testCallbackErrorNoName()
     {
         $this->expectException(SetupException::class);
-        $this->xAnnotationReader->getAttributes(CallbackError::class, ['noName']);
+        $this->getAttributes(CallbackError::class, ['noName']);
     }
 
     public function testCallbackErrorWrongNameType()
     {
         $this->expectException(SetupException::class);
-        $this->xAnnotationReader->getAttributes(CallbackError::class, ['wrongNameType']);
+        $this->getAttributes(CallbackError::class, ['wrongNameType']);
     }
 
     public function testCallbackErrorWrongNameAttr()
     {
         $this->expectException(SetupException::class);
-        $this->xAnnotationReader->getAttributes(CallbackError::class, ['wrongNameAttr']);
+        $this->getAttributes(CallbackError::class, ['wrongNameAttr']);
     }
 
     public function testCallbackErrorNameWithSpace()
     {
         $this->expectException(SetupException::class);
-        $this->xAnnotationReader->getAttributes(CallbackError::class, ['nameWithSpace']);
+        $this->getAttributes(CallbackError::class, ['nameWithSpace']);
     }
 
     public function testCallbackErrorStartWithInt()
     {
         $this->expectException(SetupException::class);
-        $this->xAnnotationReader->getAttributes(CallbackError::class, ['startWithInt']);
+        $this->getAttributes(CallbackError::class, ['startWithInt']);
     }
 }

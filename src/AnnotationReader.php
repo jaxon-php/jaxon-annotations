@@ -14,6 +14,7 @@
 
 namespace Jaxon\Annotations;
 
+use Jaxon\App\Metadata\InputDataInterface;
 use Jaxon\App\Metadata\Metadata;
 use Jaxon\App\Metadata\MetadataInterface;
 use Jaxon\App\Metadata\MetadataReaderInterface;
@@ -29,13 +30,11 @@ use Jaxon\Exception\SetupException;
 use mindplay\annotations\AnnotationException;
 use mindplay\annotations\AnnotationManager;
 use mindplay\annotations\standard\VarAnnotation;
-use ReflectionClass;
 
 use function array_filter;
 use function array_merge;
 use function count;
 use function is_a;
-use function is_string;
 
 class AnnotationReader implements MetadataReaderInterface
 {
@@ -183,19 +182,14 @@ class AnnotationReader implements MetadataReaderInterface
     }
 
     /**
-     * Get the class attributes from its annotations
-     *
-     * @param ReflectionClass|string $xReflectionClass
-     * @param array $aMethods
-     * @param array $aProperties
-     *
-     * @return MetadataInterface|null
+     * @inheritDoc
+     * @throws SetupException
      */
-    public function getAttributes(ReflectionClass|string $xReflectionClass,
-        array $aMethods = [], array $aProperties = []): ?MetadataInterface
+    public function getAttributes(InputDataInterface $xInput): ?MetadataInterface
     {
         $this->aPropTypes = [];
-        $sClass = is_string($xReflectionClass) ? $xReflectionClass : $xReflectionClass->getName();
+        $sClass = $xInput->getReflectionClass()->getName();
+
         try
         {
             // Processing properties annotations
@@ -203,7 +197,7 @@ class AnnotationReader implements MetadataReaderInterface
 
             $aPropAttrs = [];
             // Properties annotations
-            foreach($aProperties as $sProperty)
+            foreach($xInput->getProperties() as $sProperty)
             {
                 $aPropertyAttrs = $this->getPropertyAttrs($sClass, $sProperty);
                 foreach($aPropertyAttrs as $sName => $xValue)
@@ -233,7 +227,7 @@ class AnnotationReader implements MetadataReaderInterface
 
             $aAttributes = count($aClassAttrs) > 0 ? ['*' => $aClassAttrs] : [];
             $aProtected = [];
-            foreach($aMethods as $sMethod)
+            foreach($xInput->getMethods() as $sMethod)
             {
                 $aMethodAttrs = $this->getMethodAttrs($sClass, $sMethod);
                 if(isset($aMethodAttrs['protected']))

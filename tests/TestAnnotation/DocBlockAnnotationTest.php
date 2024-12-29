@@ -2,7 +2,7 @@
 
 namespace Jaxon\Annotations\Tests\TestAnnotation;
 
-use Jaxon\Annotations\AnnotationReader;
+use Jaxon\Annotations\Tests\AnnotationTrait;
 use Jaxon\Annotations\Tests\App\Ajax\DocBlockAnnotated;
 use Jaxon\Annotations\Tests\App\Ajax\DocBlockClassAnnotated;
 use Jaxon\Annotations\Tests\App\Ajax\DocBlockClassExcluded;
@@ -16,15 +16,12 @@ use function Jaxon\Annotations\registerAnnotationsReader;
 
 class DocBlockAnnotationTest extends TestCase
 {
+    use AnnotationTrait;
+
     /**
      * @var string
      */
     protected $sCacheDir;
-
-    /**
-     * @var AnnotationReader
-     */
-    protected $xAnnotationReader;
 
     /**
      * @throws SetupException
@@ -38,7 +35,6 @@ class DocBlockAnnotationTest extends TestCase
         registerAnnotationsReader();
 
         jaxon()->di()->val('jaxon_annotations_cache_dir', $this->sCacheDir);
-        $this->xAnnotationReader = jaxon()->di()->getMetadataReader('annotations');
     }
 
     /**
@@ -66,7 +62,7 @@ class DocBlockAnnotationTest extends TestCase
      */
     public function testUploadAndExcludeAnnotation()
     {
-        $xMetadata = $this->xAnnotationReader->getAttributes(DocBlockAnnotated::class, ['saveFiles', 'doNot']);
+        $xMetadata = $this->getAttributes(DocBlockAnnotated::class, ['saveFiles', 'doNot']);
         $bExcluded = $xMetadata->isExcluded();
         $aProperties = $xMetadata->getProperties();
         $aProtected = $xMetadata->getProtectedMethods();
@@ -87,7 +83,7 @@ class DocBlockAnnotationTest extends TestCase
      */
     public function testDataBagAnnotation()
     {
-        $xMetadata = $this->xAnnotationReader->getAttributes(DocBlockAnnotated::class, ['withBags']);
+        $xMetadata = $this->getAttributes(DocBlockAnnotated::class, ['withBags']);
         $bExcluded = $xMetadata->isExcluded();
         $aProperties = $xMetadata->getProperties();
 
@@ -106,7 +102,7 @@ class DocBlockAnnotationTest extends TestCase
      */
     public function testCallbackAnnotation()
     {
-        $xMetadata = $this->xAnnotationReader->getAttributes(DocBlockAnnotated::class, ['withCallback']);
+        $xMetadata = $this->getAttributes(DocBlockAnnotated::class, ['withCallback']);
         $bExcluded = $xMetadata->isExcluded();
         $aProperties = $xMetadata->getProperties();
 
@@ -123,7 +119,7 @@ class DocBlockAnnotationTest extends TestCase
      */
     public function testHooksAnnotation()
     {
-        $xMetadata = $this->xAnnotationReader->getAttributes(DocBlockAnnotated::class,
+        $xMetadata = $this->getAttributes(DocBlockAnnotated::class,
             ['cbSingle', 'cbMultiple', 'cbParams']);
         $bExcluded = $xMetadata->isExcluded();
         $aProperties = $xMetadata->getProperties();
@@ -169,7 +165,7 @@ class DocBlockAnnotationTest extends TestCase
      */
     public function testContainerAnnotation()
     {
-        $xMetadata = $this->xAnnotationReader->getAttributes(DocBlockAnnotated::class, ['di1', 'di2']);
+        $xMetadata = $this->getAttributes(DocBlockAnnotated::class, ['di1', 'di2']);
         $bExcluded = $xMetadata->isExcluded();
         $aProperties = $xMetadata->getProperties();
 
@@ -191,7 +187,7 @@ class DocBlockAnnotationTest extends TestCase
      */
     public function testClassAnnotation()
     {
-        $xMetadata = $this->xAnnotationReader->getAttributes(DocBlockClassAnnotated::class, []);
+        $xMetadata = $this->getAttributes(DocBlockClassAnnotated::class, []);
         // $this->assertEquals('', json_encode($aProperties));
         $bExcluded = $xMetadata->isExcluded();
         $aProperties = $xMetadata->getProperties();
@@ -240,7 +236,7 @@ class DocBlockAnnotationTest extends TestCase
      */
     public function testClassExcludeAnnotation()
     {
-        $xMetadata = $this->xAnnotationReader->getAttributes(DocBlockClassExcluded::class,
+        $xMetadata = $this->getAttributes(DocBlockClassExcluded::class,
             ['doNot', 'withBags', 'cbSingle']);
         $bExcluded = $xMetadata->isExcluded();
         $aProperties = $xMetadata->getProperties();
@@ -254,84 +250,84 @@ class DocBlockAnnotationTest extends TestCase
     public function testUploadAnnotationErrorFieldName()
     {
         $this->expectException(SetupException::class);
-        $this->xAnnotationReader->getAttributes(DocBlockAnnotated::class, ['saveFileErrorFieldName']);
+        $this->getAttributes(DocBlockAnnotated::class, ['saveFileErrorFieldName']);
     }
 
     public function testUploadAnnotationErrorFieldNumber()
     {
         $this->expectException(SetupException::class);
-        $this->xAnnotationReader->getAttributes(DocBlockAnnotated::class, ['saveFileErrorFieldNumber']);
+        $this->getAttributes(DocBlockAnnotated::class, ['saveFileErrorFieldNumber']);
     }
 
     public function testDataBagAnnotationErrorName()
     {
         $this->expectException(SetupException::class);
-        $this->xAnnotationReader->getAttributes(DocBlockAnnotated::class, ['withBagsErrorName']);
+        $this->getAttributes(DocBlockAnnotated::class, ['withBagsErrorName']);
     }
 
     public function testDataBagAnnotationErrorNumber()
     {
         $this->expectException(SetupException::class);
-        $this->xAnnotationReader->getAttributes(DocBlockAnnotated::class, ['withBagsErrorNumber']);
+        $this->getAttributes(DocBlockAnnotated::class, ['withBagsErrorNumber']);
     }
 
     public function testContainerAnnotationErrorAttr()
     {
         $this->expectException(SetupException::class);
-        $this->xAnnotationReader->getAttributes(DocBlockAnnotated::class, ['diErrorAttr']);
+        $this->getAttributes(DocBlockAnnotated::class, ['diErrorAttr']);
     }
 
     public function testContainerAnnotationErrorClass()
     {
         $this->expectException(SetupException::class);
-        $this->xAnnotationReader->getAttributes(DocBlockAnnotated::class, ['diErrorClass']);
+        $this->getAttributes(DocBlockAnnotated::class, ['diErrorClass']);
     }
 
     public function testContainerAnnotationErrorOneParam()
     {
         $this->expectException(SetupException::class);
-        $this->xAnnotationReader->getAttributes(DocBlockAnnotated::class, ['diErrorOneParam']);
+        $this->getAttributes(DocBlockAnnotated::class, ['diErrorOneParam']);
     }
 
     public function testContainerAnnotationErrorThreeParams()
     {
         $this->expectException(SetupException::class);
-        $this->xAnnotationReader->getAttributes(DocBlockAnnotated::class, ['diErrorThreeParams']);
+        $this->getAttributes(DocBlockAnnotated::class, ['diErrorThreeParams']);
     }
 
     public function testCbBeforeAnnotationErrorName()
     {
         $this->expectException(SetupException::class);
-        $this->xAnnotationReader->getAttributes(DocBlockAnnotated::class, ['cbBeforeErrorName']);
+        $this->getAttributes(DocBlockAnnotated::class, ['cbBeforeErrorName']);
     }
 
     public function testCbBeforeAnnotationErrorParam()
     {
         $this->expectException(SetupException::class);
-        $this->xAnnotationReader->getAttributes(DocBlockAnnotated::class, ['cbBeforeErrorParam']);
+        $this->getAttributes(DocBlockAnnotated::class, ['cbBeforeErrorParam']);
     }
 
     public function testCbBeforeAnnotationErrorNumber()
     {
         $this->expectException(SetupException::class);
-        $this->xAnnotationReader->getAttributes(DocBlockAnnotated::class, ['cbBeforeErrorNumber']);
+        $this->getAttributes(DocBlockAnnotated::class, ['cbBeforeErrorNumber']);
     }
 
     public function testCbAfterAnnotationErrorName()
     {
         $this->expectException(SetupException::class);
-        $this->xAnnotationReader->getAttributes(DocBlockAnnotated::class, ['cbAfterErrorName']);
+        $this->getAttributes(DocBlockAnnotated::class, ['cbAfterErrorName']);
     }
 
     public function testCbAfterAnnotationErrorParam()
     {
         $this->expectException(SetupException::class);
-        $this->xAnnotationReader->getAttributes(DocBlockAnnotated::class, ['cbAfterErrorParam']);
+        $this->getAttributes(DocBlockAnnotated::class, ['cbAfterErrorParam']);
     }
 
     public function testCbAfterAnnotationErrorNumber()
     {
         $this->expectException(SetupException::class);
-        $this->xAnnotationReader->getAttributes(DocBlockAnnotated::class, ['cbAfterErrorNumber']);
+        $this->getAttributes(DocBlockAnnotated::class, ['cbAfterErrorNumber']);
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Jaxon\Annotations\Tests\TestAnnotation;
 
-use Jaxon\Annotations\AnnotationReader;
+use Jaxon\Annotations\Tests\AnnotationTrait;
 use Jaxon\Annotations\Tests\App\Ajax\TraitAnnotated;
 use Jaxon\Exception\SetupException;
 use PHPUnit\Framework\TestCase;
@@ -12,15 +12,12 @@ use function Jaxon\Annotations\registerAnnotationsReader;
 
 class TraitAnnotationTest extends TestCase
 {
+    use AnnotationTrait;
+
     /**
      * @var string
      */
     protected $sCacheDir;
-
-    /**
-     * @var AnnotationReader
-     */
-    protected $xAnnotationReader;
 
     /**
      * @throws SetupException
@@ -34,7 +31,6 @@ class TraitAnnotationTest extends TestCase
         registerAnnotationsReader();
 
         jaxon()->di()->val('jaxon_annotations_cache_dir', $this->sCacheDir);
-        $this->xAnnotationReader = jaxon()->di()->getMetadataReader('annotations');
     }
 
     /**
@@ -62,7 +58,7 @@ class TraitAnnotationTest extends TestCase
      */
     public function testTraitAnnotation()
     {
-        $xMetadata = $this->xAnnotationReader->getAttributes(TraitAnnotated::class, []);
+        $xMetadata = $this->getAttributes(TraitAnnotated::class, []);
         $bExcluded = $xMetadata->isExcluded();
         $aProperties = $xMetadata->getProperties();
 

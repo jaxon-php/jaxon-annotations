@@ -2,7 +2,7 @@
 
 namespace Jaxon\Annotations\Tests\TestAnnotation;
 
-use Jaxon\Annotations\AnnotationReader;
+use Jaxon\Annotations\Tests\AnnotationTrait;
 use Jaxon\Annotations\Tests\App\Ajax\AttrAnnotated;
 use Jaxon\Exception\SetupException;
 use PHPUnit\Framework\TestCase;
@@ -12,15 +12,12 @@ use function Jaxon\Annotations\registerAnnotationsReader;
 
 class AttrAnnotationTest extends TestCase
 {
+    use AnnotationTrait;
+
     /**
      * @var string
      */
     protected $sCacheDir;
-
-    /**
-     * @var AnnotationReader
-     */
-    protected $xAnnotationReader;
 
     /**
      * @throws SetupException
@@ -34,7 +31,6 @@ class AttrAnnotationTest extends TestCase
         registerAnnotationsReader();
 
         jaxon()->di()->val('jaxon_annotations_cache_dir', $this->sCacheDir);
-        $this->xAnnotationReader = jaxon()->di()->getMetadataReader('annotations');
     }
 
     /**
@@ -62,7 +58,7 @@ class AttrAnnotationTest extends TestCase
      */
     public function testContainerAnnotation()
     {
-        $xMetadata = $this->xAnnotationReader->getAttributes(AttrAnnotated::class,
+        $xMetadata = $this->getAttributes(AttrAnnotated::class,
             ['attrVar'], ['colorService', 'fontService', 'textService']);
         $bExcluded = $xMetadata->isExcluded();
         $aProperties = $xMetadata->getProperties();
@@ -82,7 +78,7 @@ class AttrAnnotationTest extends TestCase
      */
     public function testContainerDocBlockAnnotation()
     {
-        $xMetadata = $this->xAnnotationReader->getAttributes(AttrAnnotated::class,
+        $xMetadata = $this->getAttributes(AttrAnnotated::class,
             ['attrDbVar'], ['colorService', 'fontService', 'textService']);
         $bExcluded = $xMetadata->isExcluded();
         $aProperties = $xMetadata->getProperties();
@@ -102,7 +98,7 @@ class AttrAnnotationTest extends TestCase
      */
     public function testContainerDiAnnotation()
     {
-        $xMetadata = $this->xAnnotationReader->getAttributes(AttrAnnotated::class,
+        $xMetadata = $this->getAttributes(AttrAnnotated::class,
             ['attrDi'], ['colorService1', 'fontService1', 'textService1']);
         $bExcluded = $xMetadata->isExcluded();
         $aProperties = $xMetadata->getProperties();
@@ -122,7 +118,7 @@ class AttrAnnotationTest extends TestCase
      */
     public function testContainerDiAndVarAnnotation()
     {
-        $xMetadata = $this->xAnnotationReader->getAttributes(AttrAnnotated::class,
+        $xMetadata = $this->getAttributes(AttrAnnotated::class,
             ['attrDi'], ['colorService2', 'fontService2', 'textService2']);
         $bExcluded = $xMetadata->isExcluded();
         $aProperties = $xMetadata->getProperties();
@@ -142,7 +138,7 @@ class AttrAnnotationTest extends TestCase
      */
     public function testContainerPropAnnotation()
     {
-        $xMetadata = $this->xAnnotationReader->getAttributes(AttrAnnotated::class,
+        $xMetadata = $this->getAttributes(AttrAnnotated::class,
             ['attrDi'], ['colorService3', 'fontService3', 'textService3']);
         $bExcluded = $xMetadata->isExcluded();
         $aProperties = $xMetadata->getProperties();
@@ -160,42 +156,42 @@ class AttrAnnotationTest extends TestCase
     public function testContainerAnnotationErrorTwoParams()
     {
         $this->expectException(SetupException::class);
-        $this->xAnnotationReader->getAttributes(AttrAnnotated::class, [], ['errorTwoParams']);
+        $this->getAttributes(AttrAnnotated::class, [], ['errorTwoParams']);
     }
 
     public function testContainerAnnotationErrorDiAttr()
     {
         $this->expectException(SetupException::class);
-        $this->xAnnotationReader->getAttributes(AttrAnnotated::class, [], ['errorDiAttr']);
+        $this->getAttributes(AttrAnnotated::class, [], ['errorDiAttr']);
     }
 
     public function testContainerAnnotationErrorDiDbAttr()
     {
         $this->expectException(SetupException::class);
-        $this->xAnnotationReader->getAttributes(AttrAnnotated::class, [], ['errorDiDbAttr']);
+        $this->getAttributes(AttrAnnotated::class, [], ['errorDiDbAttr']);
     }
 
     public function testContainerAnnotationErrorTwoDi()
     {
         $this->expectException(SetupException::class);
-        $this->xAnnotationReader->getAttributes(AttrAnnotated::class, [], ['errorTwoDi']);
+        $this->getAttributes(AttrAnnotated::class, [], ['errorTwoDi']);
     }
 
     public function testContainerAnnotationErrorDiClass()
     {
         $this->expectException(SetupException::class);
-        $this->xAnnotationReader->getAttributes(AttrAnnotated::class, ['errorDiClass']);
+        $this->getAttributes(AttrAnnotated::class, ['errorDiClass']);
     }
 
     public function testContainerAnnotationErrorNoVar()
     {
         $this->expectException(SetupException::class);
-        $this->xAnnotationReader->getAttributes(AttrAnnotated::class, ['errorDiNoVar']);
+        $this->getAttributes(AttrAnnotated::class, ['errorDiNoVar']);
     }
 
     public function testContainerAnnotationErrorTwoVars()
     {
         $this->expectException(SetupException::class);
-        $this->xAnnotationReader->getAttributes(AttrAnnotated::class, ['errorDiTwoVars']);
+        $this->getAttributes(AttrAnnotated::class, ['errorDiTwoVars']);
     }
 }
