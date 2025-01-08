@@ -12,7 +12,7 @@ use Jaxon\Exception\SetupException;
 use PHPUnit\Framework\TestCase;
 
 use function Jaxon\jaxon;
-use function Jaxon\Annotations\register;
+use function Jaxon\Annotations\_register;
 
 class AnnotationTest extends TestCase
 {
@@ -32,7 +32,7 @@ class AnnotationTest extends TestCase
         @mkdir($this->sCacheDir);
 
         jaxon()->di()->getPluginManager()->registerPlugins();
-        register();
+        _register();
 
         jaxon()->di()->val('jaxon_annotations_cache_dir', $this->sCacheDir);
     }

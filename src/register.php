@@ -14,14 +14,8 @@ use function sys_get_temp_dir;
  *
  * @return void
  */
-function register()
+function _register()
 {
-    // Do nothing if running in cli.
-    if(php_sapi_name() === 'cli')
-    {
-        return;
-    };
-
     $di = jaxon()->di();
 
     $sCacheDirKey = 'jaxon_annotations_cache_dir';
@@ -35,6 +29,15 @@ function register()
     });
 
     $di->alias('metadata_reader_annotations', AnnotationReader::class);
+}
+
+function register()
+{
+    // Do nothing if running in cli.
+    if(php_sapi_name() !== 'cli')
+    {
+        _register();
+    };
 }
 
 register();
