@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
 use function Jaxon\jaxon;
 use function mkdir;
 use function rmdir;
-use function Jaxon\Annotations\registerAnnotationsReader;
+use function Jaxon\Annotations\register;
 
 class DocBlockAnnotationTest extends TestCase
 {
@@ -32,7 +32,7 @@ class DocBlockAnnotationTest extends TestCase
         @mkdir($this->sCacheDir);
 
         jaxon()->di()->getPluginManager()->registerPlugins();
-        registerAnnotationsReader();
+        register();
 
         jaxon()->di()->val('jaxon_annotations_cache_dir', $this->sCacheDir);
     }

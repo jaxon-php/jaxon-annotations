@@ -16,7 +16,7 @@ use function sys_get_temp_dir;
  */
 function register()
 {
-    // Register only if running on a web server.
+    // Do nothing if running in cli.
     if(php_sapi_name() === 'cli')
     {
         return;

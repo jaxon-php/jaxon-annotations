@@ -8,7 +8,7 @@ use Jaxon\Exception\SetupException;
 use PHPUnit\Framework\TestCase;
 
 use function Jaxon\jaxon;
-use function Jaxon\Annotations\registerAnnotationsReader;
+use function Jaxon\Annotations\register;
 
 class TraitAnnotationTest extends TestCase
 {
@@ -28,7 +28,7 @@ class TraitAnnotationTest extends TestCase
         @mkdir($this->sCacheDir);
 
         jaxon()->di()->getPluginManager()->registerPlugins();
-        registerAnnotationsReader();
+        register();
 
         jaxon()->di()->val('jaxon_annotations_cache_dir', $this->sCacheDir);
     }
