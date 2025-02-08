@@ -76,6 +76,8 @@ class AnnotationReader implements MetadataReaderInterface
         // We need to define this, otherwise they throw an exception, and make the whole processing fail.
         $this->xManager->registry['const'] = false;
         $this->xManager->registry['inheritDoc'] = false;
+        $this->xManager->registry['template'] = false;
+        $this->xManager->registry['param-closure-this'] = false;
     }
 
     /**
