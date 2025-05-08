@@ -24,7 +24,7 @@ use function preg_split;
 /**
  * Specifies the javascript object to be used as callback.
  *
- * @usage('class' => true, 'method'=>true, 'multiple'=>false, 'inherited'=>true)
+ * @usage('class' => true, 'method'=>true, 'multiple'=>true, 'inherited'=>true)
  */
 class CallbackAnnotation extends AbstractAnnotation
 {
@@ -86,6 +86,11 @@ class CallbackAnnotation extends AbstractAnnotation
      */
     public function getValue()
     {
-        return $this->sJsObject;
+        if(is_array($this->xPrevValue))
+        {
+            $this->xPrevValue[] = $this->sJsObject; // Append the current value to the array
+            return $this->xPrevValue;
+        }
+        return [$this->sJsObject]; // Return the current value in an array
     }
 }
