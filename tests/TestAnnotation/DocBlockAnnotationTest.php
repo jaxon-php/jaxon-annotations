@@ -111,7 +111,8 @@ class DocBlockAnnotationTest extends TestCase
         $this->assertCount(1, $aProperties);
         $this->assertArrayHasKey('withCallback', $aProperties);
         $this->assertCount(1, $aProperties['withCallback']);
-        $this->assertEquals('jaxon.ajax.callback.test', $aProperties['withCallback']['callback']);
+        $this->assertIsArray($aProperties['withCallback']['callback']);
+        $this->assertEquals('jaxon.ajax.callback.test', $aProperties['withCallback']['callback'][0]);
     }
 
     /**
@@ -206,7 +207,8 @@ class DocBlockAnnotationTest extends TestCase
         $this->assertEquals('user.name', $aProperties['*']['bags'][0]);
         $this->assertEquals('page.number', $aProperties['*']['bags'][1]);
 
-        $this->assertEquals('jaxon.ajax.callback.test', $aProperties['*']['callback']);
+        $this->assertIsArray($aProperties['*']['callback']);
+        $this->assertEquals('jaxon.ajax.callback.test', $aProperties['*']['callback'][0]);
 
         $this->assertCount(2, $aProperties['*']['__before']);
         $this->assertArrayHasKey('funcBefore1', $aProperties['*']['__before']);

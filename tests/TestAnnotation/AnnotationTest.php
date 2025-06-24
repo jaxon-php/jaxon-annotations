@@ -206,7 +206,8 @@ class AnnotationTest extends TestCase
         $xMetadata = $this->getAttributes(ClassAnnotated::class, []);
         $aProperties = $xMetadata->getProperties();
 
-        $this->assertEquals('jaxon.callback.global', $aProperties['*']['callback']);
+        $this->assertIsArray($aProperties['*']['callback']);
+        $this->assertEquals('jaxon.callback.global', $aProperties['*']['callback'][0]);
     }
 
     /**
