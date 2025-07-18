@@ -47,7 +47,7 @@ abstract class AbstractAnnotation extends Annotation implements IAnnotationParse
      *
      * @return void
      */
-    public function setPrevValue($xPrevValue)
+    public function setPrevValue($xPrevValue): void
     {
         $this->xPrevValue = $xPrevValue;
     }

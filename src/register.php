@@ -14,7 +14,7 @@ use function sys_get_temp_dir;
  *
  * @return void
  */
-function _register()
+function _register(): void
 {
     $di = jaxon()->di();
 
@@ -31,7 +31,7 @@ function _register()
     $di->alias('metadata_reader_annotations', AnnotationReader::class);
 }
 
-function register()
+function register(): void
 {
     // Do nothing if running in cli.
     if(php_sapi_name() !== 'cli')
