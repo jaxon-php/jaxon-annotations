@@ -14,6 +14,7 @@
 
 namespace Jaxon\Annotations\Annotation;
 
+use Jaxon\App\Metadata\Metadata;
 use mindplay\annotations\AnnotationException;
 
 use function count;
@@ -22,7 +23,7 @@ use function is_bool;
 /**
  * Specifies if a class or method is excluded from js export.
  *
- * @usage('class' => true, 'method'=>true)
+ * @usage('class' => true, 'method' => true)
  */
 class ExcludeAnnotation extends AbstractAnnotation
 {
@@ -36,15 +37,7 @@ class ExcludeAnnotation extends AbstractAnnotation
      */
     public static function parseAnnotation($value)
     {
-        if($value === 'true')
-        {
-            return [true];
-        }
-        if($value === 'false')
-        {
-            return [false];
-        }
-        return [$value];
+        return [$value === 'true' ? true : ($value === 'false' ? false : $value)];
     }
 
     /**
@@ -53,8 +46,8 @@ class ExcludeAnnotation extends AbstractAnnotation
      */
     public function initAnnotation(array $properties)
     {
-        if(count($properties) !== 0 &&
-            (count($properties) !== 1 || !isset($properties[0]) || !is_bool($properties[0])))
+        if(count($properties) !== 0 && (count($properties) !== 1
+            || !isset($properties[0]) || !is_bool($properties[0])))
         {
             throw new AnnotationException('the @exclude annotation requires a single boolean or no property');
         }
@@ -64,16 +57,8 @@ class ExcludeAnnotation extends AbstractAnnotation
     /**
      * @inheritDoc
      */
-    public function getName(): string
+    public function saveValue(Metadata $xMetadata, string $sMethod = '*'): void
     {
-        return 'protected';
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getValue()
-    {
-        return $this->bValue;
+        $xMetadata->exclude($sMethod)->setValue($this->bValue);
     }
 }

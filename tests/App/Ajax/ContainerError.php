@@ -2,9 +2,9 @@
 
 namespace Jaxon\Annotations\Tests\App\Ajax;
 
-use Jaxon\Annotations\Tests\App\CallableClass;
+use Jaxon\Annotations\Tests\App\FuncComponent;
 
-class ContainerError extends CallableClass
+class ContainerError extends FuncComponent
 {
     /**
      * @di('class' => 'Class1')

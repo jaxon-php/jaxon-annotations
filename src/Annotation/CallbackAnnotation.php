@@ -14,22 +14,22 @@
 
 namespace Jaxon\Annotations\Annotation;
 
+use Jaxon\App\Metadata\Metadata;
 use mindplay\annotations\AnnotationException;
 
 use function count;
 use function is_string;
-use function preg_match;
 use function preg_split;
 
 /**
  * Specifies the javascript object to be used as callback.
  *
- * @usage('class' => true, 'method'=>true, 'multiple'=>true, 'inherited'=>true)
+ * @usage('class' => true, 'method' => true, 'multiple' => true, 'inherited' => true)
  */
 class CallbackAnnotation extends AbstractAnnotation
 {
     /**
-     * The name of the javascript object
+     * The javascript object name
      *
      * @var string
      */
@@ -45,18 +45,6 @@ class CallbackAnnotation extends AbstractAnnotation
     }
 
     /**
-     * Validate a javascript class name
-     *
-     * @param string $sJsObject    The class name
-     *
-     * @return bool
-     */
-    public function validateObjectName(string $sJsObject): bool
-    {
-        return (preg_match('/^([a-zA-Z][a-zA-Z0-9_]*)(\.[a-zA-Z][a-zA-Z0-9_]*)*$/', $sJsObject) > 0);
-    }
-
-    /**
      * @inheritDoc
      * @throws AnnotationException
      */
@@ -66,31 +54,14 @@ class CallbackAnnotation extends AbstractAnnotation
         {
             throw new AnnotationException('the @callback annotation requires a single string as property');
         }
-        if(!$this->validateObjectName($properties['name']))
-        {
-            throw new AnnotationException($properties['name'] . ' is not a valid "name" value for the @callback annotation');
-        }
         $this->sJsObject = $properties['name'];
     }
 
     /**
      * @inheritDoc
      */
-    public function getName(): string
+    public function saveValue(Metadata $xMetadata, string $sMethod = '*'): void
     {
-        return 'callback';
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getValue()
-    {
-        if(is_array($this->xPrevValue))
-        {
-            $this->xPrevValue[] = $this->sJsObject; // Append the current value to the array
-            return $this->xPrevValue;
-        }
-        return [$this->sJsObject]; // Return the current value in an array
+        $xMetadata->callback($sMethod)->addValue($this->sJsObject);
     }
 }

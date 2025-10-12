@@ -2,9 +2,9 @@
 
 namespace Jaxon\Annotations\Tests\App\Ajax;
 
-use Jaxon\Annotations\Tests\App\CallableClass;
+use Jaxon\Annotations\Tests\App\FuncComponent;
 
-class CallbackError extends CallableClass
+class CallbackError extends FuncComponent
 {
     /**
      * @callback

@@ -2,7 +2,7 @@
 
 namespace Jaxon\Annotations\Tests\App\Ajax;
 
-use Jaxon\Annotations\Tests\App\CallableClass;
+use Jaxon\Annotations\Tests\App\FuncComponent;
 use Jaxon\Annotations\Tests\Service\TextService;
 
 /**
@@ -19,7 +19,7 @@ use Jaxon\Annotations\Tests\Service\TextService;
  * @di('attr' => 'fontService', 'class' => 'FontService')
  * @callback('name' => 'jaxon.callback.global')
  */
-class ClassAnnotated extends CallableClass
+class ClassAnnotated extends FuncComponent
 {
     /**
      * @var \Jaxon\Annotations\Tests\Service\ColorService

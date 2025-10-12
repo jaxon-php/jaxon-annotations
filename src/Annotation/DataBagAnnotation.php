@@ -14,18 +14,17 @@
 
 namespace Jaxon\Annotations\Annotation;
 
+use Jaxon\App\Metadata\Metadata;
 use mindplay\annotations\AnnotationException;
 
 use function count;
-use function is_array;
 use function is_string;
-use function preg_match;
 use function preg_split;
 
 /**
  * Specifies a data bag stored in the browser and included in ajax requests to a method.
  *
- * @usage('class' => true, 'method'=>true, 'multiple'=>true, 'inherited'=>true)
+ * @usage('class' => true, 'method' => true, 'multiple' => true, 'inherited' => true)
  */
 class DataBagAnnotation extends AbstractAnnotation
 {
@@ -46,16 +45,6 @@ class DataBagAnnotation extends AbstractAnnotation
     }
 
     /**
-     * @param string $sDataBagName
-     *
-     * @return bool
-     */
-    protected function validateDataBagName(string $sDataBagName): bool
-    {
-        return preg_match('/^[a-zA-Z][a-zA-Z0-9_\-\.]*$/', $sDataBagName) > 0;
-    }
-
-    /**
      * @inheritDoc
      * @throws AnnotationException
      */
@@ -65,31 +54,14 @@ class DataBagAnnotation extends AbstractAnnotation
         {
             throw new AnnotationException('The @databag annotation requires a property "name" of type string');
         }
-        if(!$this->validateDataBagName($properties['name']))
-        {
-            throw new AnnotationException($properties['name'] . ' is not a valid "name" value for the @databag annotation');
-        }
         $this->sName = $properties['name'];
     }
 
     /**
      * @inheritDoc
      */
-    public function getName(): string
+    public function saveValue(Metadata $xMetadata, string $sMethod = '*'): void
     {
-        return 'bags';
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getValue()
-    {
-        if(is_array($this->xPrevValue))
-        {
-            $this->xPrevValue[] = $this->sName; // Append the current value to the array
-            return $this->xPrevValue;
-        }
-        return [$this->sName]; // Return the current value in an array
+        $xMetadata->databag($sMethod)->addValue($this->sName);
     }
 }

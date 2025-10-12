@@ -2,12 +2,12 @@
 
 namespace Jaxon\Annotations\Tests\App\Ajax;
 
-use Jaxon\Annotations\Tests\App\CallableClass;
+use Jaxon\Annotations\Tests\App\FuncComponent;
 
 /**
  * @exclude(true)
  */
-class ClassExcluded extends CallableClass
+class ClassExcluded extends FuncComponent
 {
     /**
      * @exclude

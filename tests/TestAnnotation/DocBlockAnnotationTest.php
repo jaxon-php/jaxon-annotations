@@ -69,13 +69,13 @@ class DocBlockAnnotationTest extends TestCase
 
         $this->assertFalse($bExcluded);
 
+        $this->assertCount(1, $aProtected);
+        $this->assertEquals('doNot', $aProtected[0]);
+
         $this->assertCount(1, $aProperties);
         $this->assertArrayHasKey('saveFiles', $aProperties);
         $this->assertCount(1, $aProperties['saveFiles']);
         $this->assertEquals("'user-files'", $aProperties['saveFiles']['upload']);
-
-        $this->assertCount(1, $aProtected);
-        $this->assertEquals('doNot', $aProtected[0]);
     }
 
     /**

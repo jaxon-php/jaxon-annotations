@@ -2,7 +2,7 @@
 
 namespace Jaxon\Annotations\Tests\App\Ajax;
 
-use Jaxon\Annotations\Tests\App\CallableClass;
+use Jaxon\Annotations\Tests\App\FuncComponent;
 use Jaxon\Annotations\Tests\Service\TextService;
 
 /**
@@ -19,6 +19,6 @@ use Jaxon\Annotations\Tests\Service\TextService;
  * @di $fontService FontService
  * @callback jaxon.ajax.callback.test
  */
-class DocBlockClassAnnotated extends CallableClass
+class DocBlockClassAnnotated extends FuncComponent
 {
 }

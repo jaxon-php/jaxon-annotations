@@ -14,10 +14,12 @@
 
 namespace Jaxon\Annotations\Annotation;
 
+use Jaxon\App\Metadata\Metadata;
+
 /**
  * Specifies a method to be called before the one targeted by a Jaxon request.
  *
- * @usage('class' => true, 'method'=>true, 'multiple'=>true, 'inherited'=>true)
+ * @usage('class' => true, 'method' => true, 'multiple' => true, 'inherited' => true)
  */
 class BeforeAnnotation extends HookAnnotation
 {
@@ -27,5 +29,13 @@ class BeforeAnnotation extends HookAnnotation
     protected static function getType(): string
     {
         return 'before';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function saveValue(Metadata $xMetadata, string $sMethod = '*'): void
+    {
+        $xMetadata->before($sMethod)->addCall($this->sMethod, $this->aParams);
     }
 }

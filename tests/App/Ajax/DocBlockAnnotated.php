@@ -2,11 +2,11 @@
 
 namespace Jaxon\Annotations\Tests\App\Ajax;
 
-use Jaxon\Annotations\Tests\App\CallableClass;
+use Jaxon\Annotations\Tests\App\FuncComponent;
 // Don't delete. This declaration is actually used by an annotation.
 use Jaxon\Annotations\Tests\Service\ColorService;
 
-class DocBlockAnnotated extends CallableClass
+class DocBlockAnnotated extends FuncComponent
 {
     /**
      * @exclude true

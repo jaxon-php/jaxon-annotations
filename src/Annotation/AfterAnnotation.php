@@ -14,10 +14,12 @@
 
 namespace Jaxon\Annotations\Annotation;
 
+use Jaxon\App\Metadata\Metadata;
+
 /**
  * Specifies a method to be called after the one targeted by a Jaxon request.
  *
- * @usage('class' => true, 'method'=>true, 'multiple'=>true, 'inherited'=>true)
+ * @usage('class' => true, 'method' => true, 'multiple' => true, 'inherited' => true)
  */
 class AfterAnnotation extends HookAnnotation
 {
@@ -27,5 +29,13 @@ class AfterAnnotation extends HookAnnotation
     protected static function getType(): string
     {
         return 'after';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function saveValue(Metadata $xMetadata, string $sMethod = '*'): void
+    {
+        $xMetadata->after($sMethod)->addCall($this->sMethod, $this->aParams);
     }
 }

@@ -14,59 +14,19 @@
 
 namespace Jaxon\Annotations\Annotation;
 
-use Jaxon\Annotations\AnnotationReader;
+use Jaxon\App\Metadata\Metadata;
 use mindplay\annotations\Annotation;
 use mindplay\annotations\IAnnotationParser;
 
 abstract class AbstractAnnotation extends Annotation implements IAnnotationParser
 {
     /**
-     * @var AnnotationReader
-     */
-    protected $xReader;
-
-    /**
-     * @var mixed
-     */
-    protected $xPrevValue = null;
-
-    /**
-     * @param AnnotationReader $xReader
+     * Save the annotation value
+     *
+     * @param Metadata $xMetadata
+     * @param string $sMethod
      *
      * @return void
      */
-    public function setReader(AnnotationReader $xReader): void
-    {
-        $this->xReader = $xReader;
-    }
-
-    /**
-     * Set the attribute previous value
-     *
-     * @param mixed $xPrevValue The previous value of the attribute
-     *
-     * @return void
-     */
-    public function setPrevValue($xPrevValue): void
-    {
-        $this->xPrevValue = $xPrevValue;
-    }
-
-    /**
-     * Get the annotation name
-     *
-     * This is usually the corresponding option name in the Jaxon config.
-     *
-     * @return string
-     */
-    abstract public function getName(): string;
-
-    /**
-     * Get the annotation value
-     *
-     * For attributes with multiple values, the previous value needs to be merged with the current.
-     *
-     * @return mixed
-     */
-    abstract public function getValue();
+    abstract public function saveValue(Metadata $xMetadata, string $sMethod = '*'): void;
 }

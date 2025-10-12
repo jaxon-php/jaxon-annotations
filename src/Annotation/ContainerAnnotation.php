@@ -14,24 +14,29 @@
 
 namespace Jaxon\Annotations\Annotation;
 
+use Jaxon\Annotations\AnnotationReader;
+use Jaxon\App\Metadata\Metadata;
 use mindplay\annotations\AnnotationException;
 use mindplay\annotations\AnnotationFile;
 use mindplay\annotations\IAnnotationFileAware;
 
 use function count;
-use function is_array;
 use function is_string;
 use function ltrim;
-use function preg_match;
 use function preg_split;
 
 /**
  * Specifies attributes to inject into a callable object.
  *
- * @usage('class' => true, 'method'=>true, 'property'=>true, 'multiple'=>true, 'inherited'=>true)
+ * @usage('class' => true, 'method' => true, 'property' => true, 'multiple' => true, 'inherited' => true)
  */
 class ContainerAnnotation extends AbstractAnnotation implements IAnnotationFileAware
 {
+    /**
+     * @var AnnotationReader
+     */
+    public static $xReader;
+
     /**
      * The annotation properties
      *
@@ -57,14 +62,6 @@ class ContainerAnnotation extends AbstractAnnotation implements IAnnotationFileA
      * @var AnnotationFile
      */
     protected $xClassFile;
-
-    /**
-     * @inheritDoc
-     */
-    public function getName(): string
-    {
-        return '__di';
-    }
 
     /**
      * @param string $sAttr
@@ -109,26 +106,6 @@ class ContainerAnnotation extends AbstractAnnotation implements IAnnotationFileA
     /**
      * @param string $sClassName
      *
-     * @return bool
-     */
-    protected function validateClassName(string $sClassName): bool
-    {
-        return preg_match('/^(\\\)?([a-zA-Z][a-zA-Z0-9_]*)(\\\[a-zA-Z][a-zA-Z0-9_]*)*$/', $sClassName) > 0;
-    }
-
-    /**
-     * @param string $sAttrName
-     *
-     * @return bool
-     */
-    protected function validateAttrName(string $sAttrName): bool
-    {
-        return preg_match('/^[a-zA-Z][a-zA-Z0-9_]*$/', $sAttrName) > 0;
-    }
-
-    /**
-     * @param string $sClassName
-     *
      * @return string
      */
     private function getFullClassName(string $sClassName): string
@@ -148,7 +125,7 @@ class ContainerAnnotation extends AbstractAnnotation implements IAnnotationFileA
         if($nParamCount === 1)
         {
             // For a property, the only parameter is the class. Otherwise, it is the attribute.
-            if($this->xReader->annotationIsOnProperty())
+            if(self::$xReader->annotationIsOnProperty())
             {
                 if(substr($aParams[0], 0, 1) === '$')
                 {
@@ -167,7 +144,7 @@ class ContainerAnnotation extends AbstractAnnotation implements IAnnotationFileA
         if($nParamCount === 2)
         {
             // For a property, having 2 parameters is not allowed.
-            if($this->xReader->annotationIsOnProperty())
+            if(self::$xReader->annotationIsOnProperty())
             {
                 throw new AnnotationException('The @di annotation accepts only one property on a class attribute');
             }
@@ -193,18 +170,13 @@ class ContainerAnnotation extends AbstractAnnotation implements IAnnotationFileA
      */
     private function checkPropertiesNames(): bool
     {
-        $nCount = count($this->properties);
-        switch($nCount)
+        return match(count($this->properties))
         {
-        case 0:
-            return true;
-        case 1:
-            return isset($this->properties['attr']) || isset($this->properties['class']);
-        case 2:
-            return isset($this->properties['attr']) && isset($this->properties['class']);
-        default:
-            return false;
-        }
+            0 => true,
+            1 => isset($this->properties['attr']) || isset($this->properties['class']),
+            2 => isset($this->properties['attr']) && isset($this->properties['class']),
+            default => false,
+        };
     }
 
     /**
@@ -220,7 +192,7 @@ class ContainerAnnotation extends AbstractAnnotation implements IAnnotationFileA
 
         if(isset($this->properties['attr']))
         {
-            if($this->xReader->annotationIsOnProperty())
+            if(self::$xReader->annotationIsOnProperty())
             {
                 throw new AnnotationException('The @di annotation does not allow the "attr" property on class attributes');
             }
@@ -242,14 +214,13 @@ class ContainerAnnotation extends AbstractAnnotation implements IAnnotationFileA
 
     /**
      * @inheritDoc
-     * @throws AnnotationException
      */
-    public function getValue()
+    public function saveValue(Metadata $xMetadata, string $sMethod = '*'): void
     {
         isset($this->properties['__value__']) ? $this->parseValue() : $this->parseProperties();
 
         // The type in the @di annotations can be set from the values in the @var annotations
-        $aPropTypes = $this->xReader->getPropTypes();
+        $aPropTypes = self::$xReader->getPropTypes();
         if($this->sClass === '')
         {
             if(!isset($aPropTypes[$this->sAttr]))
@@ -260,24 +231,6 @@ class ContainerAnnotation extends AbstractAnnotation implements IAnnotationFileA
             $this->sClass = ltrim($aPropTypes[$this->sAttr], '\\');
         }
 
-        if($this->xReader->annotationIsOnProperty() && $this->xPrevValue !== null)
-        {
-            throw new AnnotationException('Only one @di annotation is allowed on a property');
-        }
-        if(!$this->validateAttrName($this->sAttr))
-        {
-            throw new AnnotationException($this->sAttr . ' is not a valid "attr" value for the @di annotation');
-        }
-        if(!$this->validateClassName($this->sClass))
-        {
-            throw new AnnotationException($this->sClass . ' is not a valid "class" value for the @di annotation');
-        }
-
-        if(is_array($this->xPrevValue))
-        {
-            $this->xPrevValue[$this->sAttr] = $this->sClass; // Append the current value to the array
-            return $this->xPrevValue;
-        }
-        return [$this->sAttr => $this->sClass]; // Return the current value in an array
+        $xMetadata->container($sMethod)->addValue($this->sAttr, $this->sClass);
     }
 }

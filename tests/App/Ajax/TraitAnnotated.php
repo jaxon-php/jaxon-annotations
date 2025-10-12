@@ -2,7 +2,7 @@
 
 namespace Jaxon\Annotations\Tests\App\Ajax;
 
-use Jaxon\Annotations\Tests\App\CallableClass;
+use Jaxon\Annotations\Tests\App\FuncComponent;
 use Jaxon\Annotations\Tests\Service\TextService;
 
 /**
@@ -18,7 +18,7 @@ use Jaxon\Annotations\Tests\Service\TextService;
  * @di('attr' => 'textService', 'class' => 'TextService')
  * @di('attr' => 'fontService', 'class' => 'FontService')
  */
-class TraitAnnotated extends CallableClass
+class TraitAnnotated extends FuncComponent
 {
     use Traits\Annotated;
 }

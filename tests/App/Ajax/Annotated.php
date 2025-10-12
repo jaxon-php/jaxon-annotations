@@ -2,10 +2,10 @@
 
 namespace Jaxon\Annotations\Tests\App\Ajax;
 
-use Jaxon\Annotations\Tests\App\CallableClass;
+use Jaxon\Annotations\Tests\App\FuncComponent;
 use Jaxon\Annotations\Tests\Service\ColorService;
 
-class Annotated extends CallableClass
+class Annotated extends FuncComponent
 {
     /**
      * @exclude

@@ -22,7 +22,6 @@ use function count;
 use function is_array;
 use function is_string;
 use function json_decode;
-use function preg_match;
 use function preg_split;
 use function rtrim;
 
@@ -31,25 +30,17 @@ abstract class HookAnnotation extends AbstractAnnotation
     /**
      * @var string
      */
-    protected $sMethodName = '';
+    protected $sMethod = '';
 
     /**
      * @var array
      */
-    protected $sMethodParams = [];
+    protected $aParams = [];
 
     /**
      *
      */
     abstract protected static function getType(): string;
-
-    /**
-     * @inheritDoc
-     */
-    public function getName(): string
-    {
-        return '__' . $this->getType();
-    }
 
     /**
      * @inheritDoc
@@ -66,16 +57,6 @@ abstract class HookAnnotation extends AbstractAnnotation
     }
 
     /**
-     * @param string $sMethodName
-     *
-     * @return bool
-     */
-    protected function validateMethodName(string $sMethodName): bool
-    {
-        return preg_match('/^[a-zA-Z][a-zA-Z0-9_]*$/', $sMethodName) > 0;
-    }
-
-    /**
      * @inheritDoc
      * @throws AnnotationException
      */
@@ -85,11 +66,6 @@ abstract class HookAnnotation extends AbstractAnnotation
         {
             throw new AnnotationException('The @' . $this->getType() .
                 ' annotation requires a property "call" of type string');
-        }
-        if(!$this->validateMethodName($properties['call']))
-        {
-            throw new AnnotationException($properties['call'] .
-                ' is not a valid "call" value for the @' . $this->getType() . ' annotation');
         }
         foreach(array_keys($properties) as $propName)
         {
@@ -107,23 +83,8 @@ abstract class HookAnnotation extends AbstractAnnotation
                 throw new AnnotationException('The "with" property of the @' .
                     $this->getType() . ' annotation must be of type array');
             }
-            $this->sMethodParams = $properties['with'];
+            $this->aParams = $properties['with'];
         }
-        $this->sMethodName = $properties['call'];
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getValue()
-    {
-        if(is_array($this->xPrevValue))
-        {
-            // Add the current value to the array
-            $this->xPrevValue[$this->sMethodName] = $this->sMethodParams;
-            return $this->xPrevValue;
-        }
-        // Return the current value in an array
-        return [$this->sMethodName => $this->sMethodParams];
+        $this->sMethod = $properties['call'];
     }
 }
