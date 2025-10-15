@@ -3,7 +3,7 @@
 namespace Jaxon\Annotations\Tests;
 
 use Jaxon\App\Metadata\InputData;
-use Jaxon\App\Metadata\MetadataInterface;
+use Jaxon\App\Metadata\Metadata;
 use ReflectionClass;
 
 use function Jaxon\jaxon;
@@ -17,10 +17,10 @@ trait AnnotationTrait
      * @param array $aMethods
      * @param array $aProperties
      *
-     * @return MetadataInterface|null
+     * @return Metadata|null
      */
     public function getAttributes(ReflectionClass|string $xClass,
-        array $aMethods = [], array $aProperties = []): ?MetadataInterface
+        array $aMethods = [], array $aProperties = []): ?Metadata
     {
         $xInputData = new InputData($xClass, $aMethods, $aProperties);
         $xMetadataReader = jaxon()->di()->getMetadataReader('annotations');

@@ -18,12 +18,11 @@ function _register(): void
 {
     $di = jaxon()->di();
 
-    $sCacheDirKey = 'jaxon_annotations_cache_dir';
-    $di->val($sCacheDirKey, sys_get_temp_dir());
-
-    $di->set(AnnotationReader::class, function($c) use($sCacheDirKey) {
+    $di->set(AnnotationReader::class, function($c) {
+        $sKey = 'jaxon_annotations_cache_dir';
+        $sCacheDir = $c->h($sKey) ? $c->g($sKey) : sys_get_temp_dir();
         $xAnnotationManager = new AnnotationManager();
-        $xAnnotationManager->cache = new AnnotationCache($c->g($sCacheDirKey));
+        $xAnnotationManager->cache = new AnnotationCache($sCacheDir);
 
         return new AnnotationReader($xAnnotationManager);
     });
