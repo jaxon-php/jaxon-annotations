@@ -14,7 +14,7 @@
 
 namespace Jaxon\Annotations;
 
-use Jaxon\App\Metadata\InputDataInterface;
+use Jaxon\App\Metadata\InputData;
 use Jaxon\App\Metadata\Metadata;
 use Jaxon\App\Metadata\MetadataReaderInterface;
 use Jaxon\Annotations\Annotation\AbstractAnnotation;
@@ -195,7 +195,7 @@ class AnnotationReader implements MetadataReaderInterface
      * @inheritDoc
      * @throws SetupException
      */
-    public function getAttributes(InputDataInterface $xInput): ?Metadata
+    public function getAttributes(InputData $xInput): ?Metadata
     {
         ContainerAnnotation::$xReader = $this;
         $this->aPropTypes = [];
