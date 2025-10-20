@@ -21,7 +21,7 @@ use Jaxon\Annotations\Annotation\AbstractAnnotation;
 use Jaxon\Annotations\Annotation\AfterAnnotation;
 use Jaxon\Annotations\Annotation\BeforeAnnotation;
 use Jaxon\Annotations\Annotation\CallbackAnnotation;
-use Jaxon\Annotations\Annotation\DataBagAnnotation;
+use Jaxon\Annotations\Annotation\DatabagAnnotation;
 use Jaxon\Annotations\Annotation\ExcludeAnnotation;
 use Jaxon\Annotations\Annotation\UploadAnnotation;
 use Jaxon\Annotations\Annotation\ContainerAnnotation;
@@ -69,7 +69,7 @@ class AnnotationReader implements MetadataReaderInterface
     {
         $this->xManager = $xManager;
         $this->xManager->registry['upload'] = UploadAnnotation::class;
-        $this->xManager->registry['databag'] = DataBagAnnotation::class;
+        $this->xManager->registry['databag'] = DatabagAnnotation::class;
         $this->xManager->registry['exclude'] = ExcludeAnnotation::class;
         $this->xManager->registry['before'] = BeforeAnnotation::class;
         $this->xManager->registry['after'] = AfterAnnotation::class;

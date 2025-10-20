@@ -1,7 +1,7 @@
 <?php
 
 /**
- * DataBagAnnotation.php
+ * DatabagAnnotation.php
  *
  * Jaxon annotation for data bags.
  *
@@ -26,7 +26,7 @@ use function preg_split;
  *
  * @usage('class' => true, 'method' => true, 'multiple' => true, 'inherited' => true)
  */
-class DataBagAnnotation extends AbstractAnnotation
+class DatabagAnnotation extends AbstractAnnotation
 {
     /**
      * The data bag name

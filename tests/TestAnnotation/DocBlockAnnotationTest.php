@@ -81,7 +81,7 @@ class DocBlockAnnotationTest extends TestCase
     /**
      * @throws SetupException
      */
-    public function testDataBagAnnotation()
+    public function testDatabagAnnotation()
     {
         $xMetadata = $this->getAttributes(DocBlockAnnotated::class, ['withBags']);
         $bExcluded = $xMetadata->isExcluded();
@@ -261,13 +261,13 @@ class DocBlockAnnotationTest extends TestCase
         $this->getAttributes(DocBlockAnnotated::class, ['saveFileErrorFieldNumber']);
     }
 
-    public function testDataBagAnnotationErrorName()
+    public function testDatabagAnnotationErrorName()
     {
         $this->expectException(SetupException::class);
         $this->getAttributes(DocBlockAnnotated::class, ['withBagsErrorName']);
     }
 
-    public function testDataBagAnnotationErrorNumber()
+    public function testDatabagAnnotationErrorNumber()
     {
         $this->expectException(SetupException::class);
         $this->getAttributes(DocBlockAnnotated::class, ['withBagsErrorNumber']);

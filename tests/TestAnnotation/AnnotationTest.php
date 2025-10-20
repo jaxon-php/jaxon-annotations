@@ -81,7 +81,7 @@ class AnnotationTest extends TestCase
     /**
      * @throws SetupException
      */
-    public function testDataBagAnnotation()
+    public function testDatabagAnnotation()
     {
         $xMetadata = $this->getAttributes(Annotated::class, ['withBags']);
         $bExcluded = $xMetadata->isExcluded();
@@ -281,7 +281,7 @@ class AnnotationTest extends TestCase
         $this->getAttributes(Annotated::class, ['doNotError']);
     }
 
-    public function testDataBagAnnotationError()
+    public function testDatabagAnnotationError()
     {
         $this->expectException(SetupException::class);
         $this->getAttributes(Annotated::class, ['withBagsError']);
