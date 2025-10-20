@@ -195,7 +195,7 @@ class AnnotationReader implements MetadataReaderInterface
      * @inheritDoc
      * @throws SetupException
      */
-    public function getAttributes(InputData $xInput): ?Metadata
+    public function getAttributes(InputData $xInput): Metadata
     {
         ContainerAnnotation::$xReader = $this;
         $this->aPropTypes = [];
