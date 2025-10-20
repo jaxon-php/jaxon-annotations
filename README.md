@@ -1,11 +1,9 @@
 [![Build Status](https://github.com/jaxon-php/jaxon-annotations/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/jaxon-php/jaxon-annotations/actions)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/jaxon-php/jaxon-annotations/badges/quality-score.png?b=main)](https://scrutinizer-ci.com/g/jaxon-php/jaxon-annotations/?branch=main)
-[![StyleCI](https://styleci.io/repos/481695775/shield?branch=main)](https://styleci.io/repos/481695775)
 [![codecov](https://codecov.io/gh/jaxon-php/jaxon-annotations/branch/main/graph/badge.svg?token=HERKC60CC1)](https://codecov.io/gh/jaxon-php/jaxon-annotations)
 
 [![Latest Stable Version](https://poser.pugx.org/jaxon-php/jaxon-annotations/v/stable)](https://packagist.org/packages/jaxon-php/jaxon-annotations)
 [![Total Downloads](https://poser.pugx.org/jaxon-php/jaxon-annotations/downloads)](https://packagist.org/packages/jaxon-php/jaxon-annotations)
-[![Latest Unstable Version](https://poser.pugx.org/jaxon-php/jaxon-annotations/v/unstable)](https://packagist.org/packages/jaxon-php/jaxon-annotations)
 [![License](https://poser.pugx.org/jaxon-php/jaxon-annotations/license)](https://packagist.org/packages/jaxon-php/jaxon-annotations)
 
 Annotations for the Jaxon library
@@ -14,8 +12,7 @@ Annotations for the Jaxon library
 This package provides annotation support for the Jaxon library.
 The configuration options that are related to Jaxon classes can be set directly in the class files using annotations.
 
-Two different syntax are allowed for annotations: the default array-like syntax, and an alternative docblock-like syntax,
-available since version `1.4`.
+Two different syntax are allowed for annotations: the default array-like syntax, and an alternative docblock-like syntax, available since version `1.4`.
 
 Installation
 ------------
@@ -27,10 +24,30 @@ It requires `jaxon-php/jaxon-core` v4 or higher.
 composer require jaxon-php/jaxon-annotations
 ```
 
-Set the annotation config option to on.
+Set the annotation config option.
 
 ```php
-jaxon()->setOption('core.annotations.enabled', true);
+// In version 3.0.*.
+jaxon()->setOption('core.metadata', 'annotations');
+```
+
+```php
+// Starting from version 3.1.
+jaxon()->setOption('core.metadata.format', 'annotations');
+```
+
+> Note: The option must be set for a package if it defines classes with annotations.
+
+Starting from version 3.1, when deploying the application in production, the metadata can be cached, to avoid performance issues.
+
+```php
+jaxon()->setOptions([
+    'format' => 'annotations',
+    'cache' => [
+        'enabled' => true,
+        'dir' => '/path/to/the/cache/dir',
+    ],
+], 'core.metadata');
 ```
 
 Usage
@@ -248,7 +265,7 @@ It was added in version 2.2.0.
 class JaxonExample
 {
     /**
-     * Specific callback for this method. It replaces the default class callback.
+     * Specific callback for this method. It is added to the default class callback.
      *
      * @callback('name' => 'jaxon.ajax.callback.action')
      */
@@ -399,8 +416,7 @@ class JaxonExample extends \Jaxon\App\CallableClass
 }
 ```
 
-If the class name does not start with a `"\"`, then the corresponding fully qualified name (FQN) will be set using
-either the `use` instructions or the `namespace` in its source file.
+If the class name does not start with a `"\"`, then the corresponding fully qualified name (FQN) will be set using either the `use` instructions or the `namespace` in its source file.
 
 ```php
 namespace App\Ajax;
