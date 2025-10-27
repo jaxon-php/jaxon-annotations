@@ -65,12 +65,12 @@ class DocBlockAnnotationTest extends TestCase
         $xMetadata = $this->getAttributes(DocBlockAnnotated::class, ['saveFiles', 'doNot']);
         $bExcluded = $xMetadata->isExcluded();
         $aProperties = $xMetadata->getProperties();
-        $aProtected = $xMetadata->getProtectedMethods();
+        $aExcluded = $xMetadata->getExceptMethods();
 
         $this->assertFalse($bExcluded);
 
-        $this->assertCount(1, $aProtected);
-        $this->assertEquals('doNot', $aProtected[0]);
+        $this->assertCount(1, $aExcluded);
+        $this->assertEquals('doNot', $aExcluded[0]);
 
         $this->assertCount(1, $aProperties);
         $this->assertArrayHasKey('saveFiles', $aProperties);
@@ -242,11 +242,11 @@ class DocBlockAnnotationTest extends TestCase
             ['doNot', 'withBags', 'cbSingle']);
         $bExcluded = $xMetadata->isExcluded();
         $aProperties = $xMetadata->getProperties();
-        $aProtected = $xMetadata->getProtectedMethods();
+        $aExcluded = $xMetadata->getExceptMethods();
 
         $this->assertTrue($bExcluded);
         $this->assertEmpty($aProperties);
-        $this->assertEmpty($aProtected);
+        $this->assertEmpty($aExcluded);
     }
 
     public function testUploadAnnotationErrorFieldName()

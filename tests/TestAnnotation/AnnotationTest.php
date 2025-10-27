@@ -65,7 +65,7 @@ class AnnotationTest extends TestCase
         $xMetadata = $this->getAttributes(Annotated::class, ['saveFiles', 'doNot']);
         $bExcluded = $xMetadata->isExcluded();
         $aProperties = $xMetadata->getProperties();
-        $aProtected = $xMetadata->getProtectedMethods();
+        $aExcluded = $xMetadata->getExceptMethods();
 
         $this->assertFalse($bExcluded);
 
@@ -74,8 +74,8 @@ class AnnotationTest extends TestCase
         $this->assertCount(1, $aProperties['saveFiles']);
         $this->assertEquals("'user-files'", $aProperties['saveFiles']['upload']);
 
-        $this->assertCount(1, $aProtected);
-        $this->assertEquals('doNot', $aProtected[0]);
+        $this->assertCount(1, $aExcluded);
+        $this->assertEquals('doNot', $aExcluded[0]);
     }
 
     /**
@@ -268,11 +268,11 @@ class AnnotationTest extends TestCase
             ['doNot', 'withBags', 'cbSingle']);
         $bExcluded = $xMetadata->isExcluded();
         $aProperties = $xMetadata->getProperties();
-        $aProtected = $xMetadata->getProtectedMethods();
+        $aExcluded = $xMetadata->getExceptMethods();
 
         $this->assertTrue($bExcluded);
         $this->assertEmpty($aProperties);
-        $this->assertEmpty($aProtected);
+        $this->assertEmpty($aExcluded);
     }
 
     public function testExcludeAnnotationError()
