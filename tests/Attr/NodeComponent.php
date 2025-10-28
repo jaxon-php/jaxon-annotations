@@ -1,6 +1,6 @@
 <?php
 
-namespace Jaxon\Attributes\Tests\Attr;
+namespace Jaxon\Annotations\Tests\Attr;
 
 abstract class NodeComponent extends \Jaxon\App\NodeComponent
 {
