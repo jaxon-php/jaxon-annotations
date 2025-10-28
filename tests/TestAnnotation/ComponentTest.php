@@ -3,6 +3,7 @@
 namespace Jaxon\Annotations\Tests\TestAnnotation;
 
 use Jaxon\Annotations\Tests\AnnotationTrait;
+use Jaxon\Annotations\Tests\Attr\Ajax\Component\DocBlockNodeBaseComponent;
 use Jaxon\Annotations\Tests\Attr\Ajax\Component\FuncComponent;
 use Jaxon\Annotations\Tests\Attr\Ajax\Component\NodeComponent;
 use Jaxon\Annotations\Tests\Attr\Ajax\Component\NodeBaseComponent;
@@ -119,6 +120,29 @@ class ComponentTest extends TestCase
         // The attribute exports the 'html' and 'render' methods,
         // but only the 'render' method shall be exported.
         $xClass = new ReflectionClass(NodeBaseComponent::class);
+        $aMethods = ['item', 'html', 'render', 'clear', 'visible'];
+        $xMetadata = $this->getAttributes($xClass, $aMethods, []);
+        $aBaseMethods = $xMetadata->getExportBaseMethods();
+
+        // The 'html' and 'render' methods are returned.
+        $this->assertCount(2, $aBaseMethods);
+
+        $xOptions = $this->getOptions($xClass);
+        $aPublicMethods = $xOptions->getPublicMethods();
+
+        // Only the 'render' method is returned.
+        $this->assertCount(1, $aPublicMethods);
+        $this->assertEquals('render', $aPublicMethods[0]);
+    }
+
+    /**
+     * @throws SetupException
+     */
+    public function testDocBockNodeComponentExportBaseMethods()
+    {
+        // The attribute exports the 'html' and 'render' methods,
+        // but only the 'render' method shall be exported.
+        $xClass = new ReflectionClass(DocBlockNodeBaseComponent::class);
         $aMethods = ['item', 'html', 'render', 'clear', 'visible'];
         $xMetadata = $this->getAttributes($xClass, $aMethods, []);
         $aBaseMethods = $xMetadata->getExportBaseMethods();
