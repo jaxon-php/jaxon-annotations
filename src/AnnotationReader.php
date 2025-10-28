@@ -107,7 +107,7 @@ class AnnotationReader implements MetadataReaderInterface
      * @return void
      * @throws AnnotationException
      */
-    private function getClassAttrs(string $sClass): void
+    private function readClassAnnotations(string $sClass): void
     {
         // Only keep the annotations declared in this package.
         /** @var array<AbstractAnnotation> */
@@ -144,7 +144,7 @@ class AnnotationReader implements MetadataReaderInterface
      * @return void
      * @throws AnnotationException
      */
-    private function getPropertyAttrs(string $sClass, string $sProperty): void
+    private function readPropertyAnnotations(string $sClass, string $sProperty): void
     {
         /** @var array<ContainerAnnotation> */
         // Only keep the annotations declared in this package.
@@ -179,7 +179,7 @@ class AnnotationReader implements MetadataReaderInterface
      * @return void
      * @throws AnnotationException
      */
-    private function getMethodAttrs(string $sClass, string $sMethod): void
+    private function readMethodAnnotations(string $sClass, string $sMethod): void
     {
         // Only keep the annotations declared in this package.
         /** @var array<AbstractAnnotation> */
@@ -194,7 +194,6 @@ class AnnotationReader implements MetadataReaderInterface
     }
 
     /**
-     * @inheritDoc
      * @throws SetupException
      */
     public function getAttributes(InputData $xInput): Metadata
@@ -209,12 +208,7 @@ class AnnotationReader implements MetadataReaderInterface
             // Processing class annotations
             $this->sCurrMemberType = AnnotationManager::MEMBER_CLASS;
 
-            $this->getClassAttrs($sClass);
-            if($this->xMetadata->isExcluded())
-            {
-                // The entire class is not to be exported.
-                return $this->xMetadata;
-            }
+            $this->readClassAnnotations($sClass);
 
             // Processing properties annotations
             $this->sCurrMemberType = AnnotationManager::MEMBER_PROPERTY;
@@ -222,7 +216,13 @@ class AnnotationReader implements MetadataReaderInterface
             // Properties annotations
             foreach($xInput->getProperties() as $sProperty)
             {
-                $this->getPropertyAttrs($sClass, $sProperty);
+                $this->readPropertyAnnotations($sClass, $sProperty);
+            }
+
+            // The methods annotations are not taken for excluded classes.
+            if($this->xMetadata->isExcluded())
+            {
+                return $this->xMetadata;
             }
 
             // Processing methods annotations
@@ -230,7 +230,7 @@ class AnnotationReader implements MetadataReaderInterface
 
             foreach($xInput->getMethods() as $sMethod)
             {
-                $this->getMethodAttrs($sClass, $sMethod);
+                $this->readMethodAnnotations($sClass, $sMethod);
             }
 
             return $this->xMetadata;
