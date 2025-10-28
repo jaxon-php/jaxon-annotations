@@ -3,7 +3,7 @@
 namespace Jaxon\Annotations\Tests\TestAnnotation;
 
 use Jaxon\Annotations\Tests\AnnotationTrait;
-use Jaxon\Annotations\Tests\App\Ajax\TraitAnnotated;
+use Jaxon\Annotations\Tests\Attr\Ajax\TraitAnnotated;
 use Jaxon\Exception\SetupException;
 use PHPUnit\Framework\TestCase;
 
@@ -95,6 +95,6 @@ class TraitAnnotationTest extends TestCase
         $this->assertArrayHasKey('fontService', $aProperties['*']['__di']);
         $this->assertEquals('Jaxon\Annotations\Tests\Service\ColorService', $aProperties['*']['__di']['colorService']);
         $this->assertEquals('Jaxon\Annotations\Tests\Service\TextService', $aProperties['*']['__di']['textService']);
-        $this->assertEquals('Jaxon\Annotations\Tests\App\Ajax\FontService', $aProperties['*']['__di']['fontService']);
+        $this->assertEquals('Jaxon\Annotations\Tests\Attr\Ajax\FontService', $aProperties['*']['__di']['fontService']);
     }
 }

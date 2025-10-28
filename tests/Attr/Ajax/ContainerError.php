@@ -1,8 +1,8 @@
 <?php
 
-namespace Jaxon\Annotations\Tests\App\Ajax;
+namespace Jaxon\Annotations\Tests\Attr\Ajax;
 
-use Jaxon\Annotations\Tests\App\FuncComponent;
+use Jaxon\Annotations\Tests\Attr\FuncComponent;
 
 class ContainerError extends FuncComponent
 {

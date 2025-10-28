@@ -3,9 +3,9 @@
 namespace Jaxon\Annotations\Tests\TestAnnotation;
 
 use Jaxon\Annotations\Tests\AnnotationTrait;
-use Jaxon\Annotations\Tests\App\Ajax\DocBlockAnnotated;
-use Jaxon\Annotations\Tests\App\Ajax\DocBlockClassAnnotated;
-use Jaxon\Annotations\Tests\App\Ajax\DocBlockClassExcluded;
+use Jaxon\Annotations\Tests\Attr\Ajax\DocBlockAnnotated;
+use Jaxon\Annotations\Tests\Attr\Ajax\DocBlockClassAnnotated;
+use Jaxon\Annotations\Tests\Attr\Ajax\DocBlockClassExcluded;
 use Jaxon\Exception\SetupException;
 use PHPUnit\Framework\TestCase;
 
@@ -178,7 +178,7 @@ class DocBlockAnnotationTest extends TestCase
         $this->assertCount(2, $aProperties['di1']['__di']);
         $this->assertCount(2, $aProperties['di2']['__di']);
         $this->assertEquals('Jaxon\Annotations\Tests\Service\ColorService', $aProperties['di1']['__di']['colorService']);
-        $this->assertEquals('Jaxon\Annotations\Tests\App\Ajax\FontService', $aProperties['di1']['__di']['fontService']);
+        $this->assertEquals('Jaxon\Annotations\Tests\Attr\Ajax\FontService', $aProperties['di1']['__di']['fontService']);
         $this->assertEquals('Jaxon\Annotations\Tests\Service\ColorService', $aProperties['di2']['__di']['colorService']);
         $this->assertEquals('Jaxon\Annotations\Tests\Service\TextService', $aProperties['di2']['__di']['textService']);
     }
@@ -230,7 +230,7 @@ class DocBlockAnnotationTest extends TestCase
         $this->assertArrayHasKey('fontService', $aProperties['*']['__di']);
         $this->assertEquals('Jaxon\Annotations\Tests\Service\ColorService', $aProperties['*']['__di']['colorService']);
         $this->assertEquals('Jaxon\Annotations\Tests\Service\TextService', $aProperties['*']['__di']['textService']);
-        $this->assertEquals('Jaxon\Annotations\Tests\App\Ajax\FontService', $aProperties['*']['__di']['fontService']);
+        $this->assertEquals('Jaxon\Annotations\Tests\Attr\Ajax\FontService', $aProperties['*']['__di']['fontService']);
     }
 
     /**

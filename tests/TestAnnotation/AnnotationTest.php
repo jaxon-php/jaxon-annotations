@@ -3,11 +3,11 @@
 namespace Jaxon\Annotations\Tests\TestAnnotation;
 
 use Jaxon\Annotations\Tests\AnnotationTrait;
-use Jaxon\Annotations\Tests\App\Ajax\Annotated;
-use Jaxon\Annotations\Tests\App\Ajax\CallbackError;
-use Jaxon\Annotations\Tests\App\Ajax\ClassAnnotated;
-use Jaxon\Annotations\Tests\App\Ajax\ClassExcluded;
-use Jaxon\Annotations\Tests\App\Ajax\ContainerError;
+use Jaxon\Annotations\Tests\Attr\Ajax\Annotated;
+use Jaxon\Annotations\Tests\Attr\Ajax\CallbackError;
+use Jaxon\Annotations\Tests\Attr\Ajax\ClassAnnotated;
+use Jaxon\Annotations\Tests\Attr\Ajax\ClassExcluded;
+use Jaxon\Annotations\Tests\Attr\Ajax\ContainerError;
 use Jaxon\Exception\SetupException;
 use PHPUnit\Framework\TestCase;
 
@@ -160,7 +160,7 @@ class AnnotationTest extends TestCase
         $this->assertCount(2, $aProperties['di1']['__di']);
         $this->assertCount(2, $aProperties['di2']['__di']);
         $this->assertEquals('Jaxon\Annotations\Tests\Service\ColorService', $aProperties['di1']['__di']['colorService']);
-        $this->assertEquals('Jaxon\Annotations\Tests\App\Ajax\FontService', $aProperties['di1']['__di']['fontService']);
+        $this->assertEquals('Jaxon\Annotations\Tests\Attr\Ajax\FontService', $aProperties['di1']['__di']['fontService']);
         $this->assertEquals('Jaxon\Annotations\Tests\Service\ColorService', $aProperties['di2']['__di']['colorService']);
         $this->assertEquals('Jaxon\Annotations\Tests\Service\TextService', $aProperties['di2']['__di']['textService']);
     }
@@ -256,7 +256,7 @@ class AnnotationTest extends TestCase
         $this->assertArrayHasKey('fontService', $aProperties['*']['__di']);
         $this->assertEquals('Jaxon\Annotations\Tests\Service\ColorService', $aProperties['*']['__di']['colorService']);
         $this->assertEquals('Jaxon\Annotations\Tests\Service\TextService', $aProperties['*']['__di']['textService']);
-        $this->assertEquals('Jaxon\Annotations\Tests\App\Ajax\FontService', $aProperties['*']['__di']['fontService']);
+        $this->assertEquals('Jaxon\Annotations\Tests\Attr\Ajax\FontService', $aProperties['*']['__di']['fontService']);
     }
 
     /**

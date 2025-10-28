@@ -1,8 +1,8 @@
 <?php
 
-namespace Jaxon\Annotations\Tests\App\Ajax;
+namespace Jaxon\Annotations\Tests\Attr\Ajax;
 
-use Jaxon\Annotations\Tests\App\FuncComponent;
+use Jaxon\Annotations\Tests\Attr\FuncComponent;
 use Jaxon\Annotations\Tests\Service\TextService;
 
 /**
@@ -17,22 +17,8 @@ use Jaxon\Annotations\Tests\Service\TextService;
  * @di('attr' => 'colorService', 'class' => '\Jaxon\Annotations\Tests\Service\ColorService')
  * @di('attr' => 'textService', 'class' => 'TextService')
  * @di('attr' => 'fontService', 'class' => 'FontService')
- * @callback('name' => 'jaxon.callback.global')
  */
-class ClassAnnotated extends FuncComponent
+class TraitAnnotated extends FuncComponent
 {
-    /**
-     * @var \Jaxon\Annotations\Tests\Service\ColorService
-     */
-    protected $colorService;
-
-    /**
-     * @var TextService
-     */
-    protected $textService;
-
-    /**
-     * @var FontService
-     */
-    protected $fontService;
+    use Traits\Annotated;
 }

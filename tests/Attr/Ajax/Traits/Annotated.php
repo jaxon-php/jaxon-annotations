@@ -1,6 +1,6 @@
 <?php
 
-namespace Jaxon\Annotations\Tests\App\Ajax\Traits;
+namespace Jaxon\Annotations\Tests\Attr\Ajax\Traits;
 
 use Jaxon\Annotations\Tests\Service\TextService;
 

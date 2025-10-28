@@ -1,8 +1,8 @@
 <?php
 
-namespace Jaxon\Annotations\Tests\App\Ajax;
+namespace Jaxon\Annotations\Tests\Attr\Ajax;
 
-use Jaxon\Annotations\Tests\App\FuncComponent;
+use Jaxon\Annotations\Tests\Attr\FuncComponent;
 // Don't delete. This declaration is actually used by an annotation.
 use Jaxon\Annotations\Tests\Service\ColorService;
 

@@ -3,9 +3,9 @@
 namespace Jaxon\Annotations\Tests\TestAnnotation;
 
 use Jaxon\Annotations\Tests\AnnotationTrait;
-use Jaxon\Annotations\Tests\App\Ajax\ExtendAnnotated;
-use Jaxon\Annotations\Tests\App\Ajax\ClassExcluded;
-use Jaxon\Annotations\Tests\App\Ajax\ExtendClassAnnotated;
+use Jaxon\Annotations\Tests\Attr\Ajax\ExtendAnnotated;
+use Jaxon\Annotations\Tests\Attr\Ajax\ClassExcluded;
+use Jaxon\Annotations\Tests\Attr\Ajax\ExtendClassAnnotated;
 use Jaxon\Exception\SetupException;
 use PHPUnit\Framework\TestCase;
 
@@ -158,7 +158,7 @@ class ExtendAnnotationTest extends TestCase
         $this->assertCount(2, $aProperties['di1']['__di']);
         $this->assertCount(2, $aProperties['di2']['__di']);
         $this->assertEquals('Jaxon\Annotations\Tests\Service\ColorService', $aProperties['di1']['__di']['colorService']);
-        $this->assertEquals('Jaxon\Annotations\Tests\App\Ajax\FontService', $aProperties['di1']['__di']['fontService']);
+        $this->assertEquals('Jaxon\Annotations\Tests\Attr\Ajax\FontService', $aProperties['di1']['__di']['fontService']);
         $this->assertEquals('Jaxon\Annotations\Tests\Service\ColorService', $aProperties['di2']['__di']['colorService']);
         $this->assertEquals('Jaxon\Annotations\Tests\Service\TextService', $aProperties['di2']['__di']['textService']);
     }
@@ -254,7 +254,7 @@ class ExtendAnnotationTest extends TestCase
         $this->assertArrayHasKey('fontService', $aProperties['*']['__di']);
         $this->assertEquals('Jaxon\Annotations\Tests\Service\ColorService', $aProperties['*']['__di']['colorService']);
         $this->assertEquals('Jaxon\Annotations\Tests\Service\TextService', $aProperties['*']['__di']['textService']);
-        $this->assertEquals('Jaxon\Annotations\Tests\App\Ajax\FontService', $aProperties['*']['__di']['fontService']);
+        $this->assertEquals('Jaxon\Annotations\Tests\Attr\Ajax\FontService', $aProperties['*']['__di']['fontService']);
     }
 
     /**
