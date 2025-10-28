@@ -22,7 +22,7 @@ use function json_decode;
 /**
  * Specifies the methods to include in js export.
  *
- * @usage('class' => true)
+ * @usage('class' => true, 'multiple' => false, 'inherited' => true)
  */
 class ExportAnnotation extends AbstractAnnotation
 {
