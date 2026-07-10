@@ -5,7 +5,7 @@ namespace Jaxon\Annotations\Tests;
 use Jaxon\App\Metadata\InputData;
 use Jaxon\App\Metadata\Metadata;
 use Jaxon\Config\ConfigSetter;
-use Jaxon\Plugin\Request\CallableClass\ComponentOptions;
+use Jaxon\Plugin\Request\CallableComponent\ComponentOptions;
 use ReflectionClass;
 
 use function Jaxon\jaxon;
