@@ -4,6 +4,9 @@ namespace Jaxon\Annotations\Tests\TestAnnotation;
 
 use Jaxon\Annotations\Tests\AnnotationTrait;
 use Jaxon\Annotations\Tests\Attr\Ajax\AttrAnnotated;
+use Jaxon\Annotations\Tests\Attr\Ajax\FontService;
+use Jaxon\Annotations\Tests\Service\ColorService;
+use Jaxon\Annotations\Tests\Service\TextService;
 use Jaxon\Exception\SetupException;
 use PHPUnit\Framework\TestCase;
 
@@ -58,19 +61,23 @@ class AttrAnnotationTest extends TestCase
      */
     public function testContainerAnnotation()
     {
-        $xMetadata = $this->getAttributes(AttrAnnotated::class,
-            ['attrVar'], ['colorService', 'fontService', 'textService']);
+        $xMetadata = $this->getAttributes(AttrAnnotated::class, ['attrVar'],
+            [AttrAnnotated::class => ['colorService', 'fontService', 'textService']]);
         $bExcluded = $xMetadata->isExcluded();
         $aProperties = $xMetadata->getProperties();
 
         $this->assertFalse($bExcluded);
 
+        $di = $aProperties['attrVar']['__di'];
         $this->assertCount(1, $aProperties);
         $this->assertArrayHasKey('attrVar', $aProperties);
-        $this->assertCount(3, $aProperties['attrVar']['__di']);
-        $this->assertEquals('Jaxon\Annotations\Tests\Service\ColorService', $aProperties['attrVar']['__di']['colorService']);
-        $this->assertEquals('Jaxon\Annotations\Tests\Attr\Ajax\FontService', $aProperties['attrVar']['__di']['fontService']);
-        $this->assertEquals('Jaxon\Annotations\Tests\Service\TextService', $aProperties['attrVar']['__di']['textService']);
+        $this->assertCount(3, $di);
+        $this->assertEquals(ColorService::class, $di['colorService'][0]);
+        $this->assertEquals(AttrAnnotated::class, $di['colorService'][1]);
+        $this->assertEquals(FontService::class, $di['fontService'][0]);
+        $this->assertEquals(AttrAnnotated::class, $di['fontService'][1]);
+        $this->assertEquals(TextService::class, $di['textService'][0]);
+        $this->assertEquals(AttrAnnotated::class, $di['textService'][1]);
     }
 
     /**
@@ -78,19 +85,23 @@ class AttrAnnotationTest extends TestCase
      */
     public function testContainerDocBlockAnnotation()
     {
-        $xMetadata = $this->getAttributes(AttrAnnotated::class,
-            ['attrDbVar'], ['colorService', 'fontService', 'textService']);
+        $xMetadata = $this->getAttributes(AttrAnnotated::class, ['attrDbVar'],
+            [AttrAnnotated::class => ['colorService', 'fontService', 'textService']]);
         $bExcluded = $xMetadata->isExcluded();
         $aProperties = $xMetadata->getProperties();
 
         $this->assertFalse($bExcluded);
 
+        $di = $aProperties['attrDbVar']['__di'];
         $this->assertCount(1, $aProperties);
         $this->assertArrayHasKey('attrDbVar', $aProperties);
-        $this->assertCount(3, $aProperties['attrDbVar']['__di']);
-        $this->assertEquals('Jaxon\Annotations\Tests\Service\ColorService', $aProperties['attrDbVar']['__di']['colorService']);
-        $this->assertEquals('Jaxon\Annotations\Tests\Attr\Ajax\FontService', $aProperties['attrDbVar']['__di']['fontService']);
-        $this->assertEquals('Jaxon\Annotations\Tests\Service\TextService', $aProperties['attrDbVar']['__di']['textService']);
+        $this->assertCount(3, $di);
+        $this->assertEquals(ColorService::class, $di['colorService'][0]);
+        $this->assertEquals(AttrAnnotated::class, $di['colorService'][1]);
+        $this->assertEquals(FontService::class, $di['fontService'][0]);
+        $this->assertEquals(AttrAnnotated::class, $di['fontService'][1]);
+        $this->assertEquals(TextService::class, $di['textService'][0]);
+        $this->assertEquals(AttrAnnotated::class, $di['textService'][1]);
     }
 
     /**
@@ -98,19 +109,23 @@ class AttrAnnotationTest extends TestCase
      */
     public function testContainerDiAnnotation()
     {
-        $xMetadata = $this->getAttributes(AttrAnnotated::class,
-            ['attrDi'], ['colorService1', 'fontService1', 'textService1']);
+        $xMetadata = $this->getAttributes(AttrAnnotated::class, ['attrDi'],
+            [AttrAnnotated::class => ['colorService1', 'fontService1', 'textService1']]);
         $bExcluded = $xMetadata->isExcluded();
         $aProperties = $xMetadata->getProperties();
 
         $this->assertFalse($bExcluded);
 
+        $di = $aProperties['*']['__di'];
         $this->assertCount(1, $aProperties);
         $this->assertArrayHasKey('*', $aProperties);
-        $this->assertCount(3, $aProperties['*']['__di']);
-        $this->assertEquals('Jaxon\Annotations\Tests\Service\ColorService', $aProperties['*']['__di']['colorService1']);
-        $this->assertEquals('Jaxon\Annotations\Tests\Attr\Ajax\FontService', $aProperties['*']['__di']['fontService1']);
-        $this->assertEquals('Jaxon\Annotations\Tests\Service\TextService', $aProperties['*']['__di']['textService1']);
+        $this->assertCount(3, $di);
+        $this->assertEquals(ColorService::class, $di['colorService1'][0]);
+        $this->assertEquals(AttrAnnotated::class, $di['colorService1'][1]);
+        $this->assertEquals(FontService::class, $di['fontService1'][0]);
+        $this->assertEquals(AttrAnnotated::class, $di['fontService1'][1]);
+        $this->assertEquals(TextService::class, $di['textService1'][0]);
+        $this->assertEquals(AttrAnnotated::class, $di['textService1'][1]);
     }
 
     /**
@@ -118,19 +133,23 @@ class AttrAnnotationTest extends TestCase
      */
     public function testContainerDiAndVarAnnotation()
     {
-        $xMetadata = $this->getAttributes(AttrAnnotated::class,
-            ['attrDi'], ['colorService2', 'fontService2', 'textService2']);
+        $xMetadata = $this->getAttributes(AttrAnnotated::class, ['attrDi'],
+            [AttrAnnotated::class => ['colorService2', 'fontService2', 'textService2']]);
         $bExcluded = $xMetadata->isExcluded();
         $aProperties = $xMetadata->getProperties();
 
         $this->assertFalse($bExcluded);
 
+        $di = $aProperties['*']['__di'];
         $this->assertCount(1, $aProperties);
         $this->assertArrayHasKey('*', $aProperties);
-        $this->assertCount(3, $aProperties['*']['__di']);
-        $this->assertEquals('Jaxon\Annotations\Tests\Service\ColorService', $aProperties['*']['__di']['colorService2']);
-        $this->assertEquals('Jaxon\Annotations\Tests\Attr\Ajax\FontService', $aProperties['*']['__di']['fontService2']);
-        $this->assertEquals('Jaxon\Annotations\Tests\Service\TextService', $aProperties['*']['__di']['textService2']);
+        $this->assertCount(3, $di);
+        $this->assertEquals(ColorService::class, $di['colorService2'][0]);
+        $this->assertEquals(AttrAnnotated::class, $di['colorService2'][1]);
+        $this->assertEquals(FontService::class, $di['fontService2'][0]);
+        $this->assertEquals(AttrAnnotated::class, $di['fontService2'][1]);
+        $this->assertEquals(TextService::class, $di['textService2'][0]);
+        $this->assertEquals(AttrAnnotated::class, $di['textService2'][1]);
     }
 
     /**
@@ -138,43 +157,47 @@ class AttrAnnotationTest extends TestCase
      */
     public function testContainerPropAnnotation()
     {
-        $xMetadata = $this->getAttributes(AttrAnnotated::class,
-            ['attrDi'], ['colorService3', 'fontService3', 'textService3']);
+        $xMetadata = $this->getAttributes(AttrAnnotated::class, ['attrDi'],
+            [AttrAnnotated::class => ['colorService3', 'fontService3', 'textService3']]);
         $bExcluded = $xMetadata->isExcluded();
         $aProperties = $xMetadata->getProperties();
 
         $this->assertFalse($bExcluded);
 
+        $di = $aProperties['*']['__di'];
         $this->assertCount(1, $aProperties);
         $this->assertArrayHasKey('*', $aProperties);
-        $this->assertCount(3, $aProperties['*']['__di']);
-        $this->assertEquals('Jaxon\Annotations\Tests\Service\ColorService', $aProperties['*']['__di']['colorService3']);
-        $this->assertEquals('Jaxon\Annotations\Tests\Attr\Ajax\FontService', $aProperties['*']['__di']['fontService3']);
-        $this->assertEquals('Jaxon\Annotations\Tests\Service\TextService', $aProperties['*']['__di']['textService3']);
+        $this->assertCount(3, $di);
+        $this->assertEquals(ColorService::class, $di['colorService3'][0]);
+        $this->assertEquals(AttrAnnotated::class, $di['colorService3'][1]);
+        $this->assertEquals(FontService::class, $di['fontService3'][0]);
+        $this->assertEquals(AttrAnnotated::class, $di['fontService3'][1]);
+        $this->assertEquals(TextService::class, $di['textService3'][0]);
+        $this->assertEquals(AttrAnnotated::class, $di['textService3'][1]);
     }
 
     public function testContainerAnnotationErrorTwoParams()
     {
         $this->expectException(SetupException::class);
-        $this->getAttributes(AttrAnnotated::class, [], ['errorTwoParams']);
+        $this->getAttributes(AttrAnnotated::class, [], [AttrAnnotated::class => ['errorTwoParams']]);
     }
 
     public function testContainerAnnotationErrorDiAttr()
     {
         $this->expectException(SetupException::class);
-        $this->getAttributes(AttrAnnotated::class, [], ['errorDiAttr']);
+        $this->getAttributes(AttrAnnotated::class, [], [AttrAnnotated::class => ['errorDiAttr']]);
     }
 
     public function testContainerAnnotationErrorDiDbAttr()
     {
         $this->expectException(SetupException::class);
-        $this->getAttributes(AttrAnnotated::class, [], ['errorDiDbAttr']);
+        $this->getAttributes(AttrAnnotated::class, [], [AttrAnnotated::class => ['errorDiDbAttr']]);
     }
 
     public function testContainerAnnotationErrorTwoDi()
     {
         $this->expectException(SetupException::class);
-        $this->getAttributes(AttrAnnotated::class, [], ['errorTwoDi']);
+        $this->getAttributes(AttrAnnotated::class, [], [AttrAnnotated::class => ['errorTwoDi']]);
     }
 
     public function testContainerAnnotationErrorDiClass()

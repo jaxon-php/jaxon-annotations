@@ -231,6 +231,7 @@ class ContainerAnnotation extends AbstractAnnotation implements IAnnotationFileA
             $this->sClass = ltrim($aPropTypes[$this->sAttr], '\\');
         }
 
-        $xMetadata->container($sMethod)->addValue($this->sAttr, $this->sClass);
+        $xMetadata->container($sMethod)
+            ->addValue($this->sAttr, $this->sClass, $xMetadata->getDeclaringClass());
     }
 }

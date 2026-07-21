@@ -202,6 +202,7 @@ class AnnotationReader implements MetadataReaderInterface
         $this->aPropTypes = [];
         $this->xMetadata = new Metadata();
         $sClass = $xInput->getReflectionClass()->getName();
+        $this->xMetadata->setDeclaringClass($sClass);
 
         try
         {
@@ -214,7 +215,7 @@ class AnnotationReader implements MetadataReaderInterface
             $this->sCurrMemberType = AnnotationManager::MEMBER_PROPERTY;
 
             // Properties annotations
-            foreach($xInput->getProperties() as $sProperty)
+            foreach($xInput->getProperties($sClass) as $sProperty)
             {
                 $this->readPropertyAnnotations($sClass, $sProperty);
             }
